@@ -1,3 +1,8 @@
+/*
+	plugin.h version 17.5
+	Copyright © 2018 by Emurasoft, Inc.
+*/
+
 // EmEditor Plug-In definition file
 // v3.08 (6 Jan 2001)   CCustomizeInfo::m_bIgnoreColorPrint, CCustomizeInfo::m_bNoFullPathIfNotActive added.
 // v3.12 (16 Jan 2001)  EEID_ALL_PROP added.
@@ -209,6 +214,8 @@
 // v17.2				EI_VALIDATE_CSV, EI_GET_CLIENT_RECT_NO_BARS were added.
 //                      EEID_SCROLL_MARKS_TOGGLE through EEID_MAKE_COLUMNS_SAME commands were added.
 // v17.3                EEID_MOVE_COLUMN_RIGHT and EEID_MOVE_COLUMN_LEFT commands were added.
+// v17.4				Added FLAG_FIND_BOL, FLAG_FIND_EOL, and FLAG_FIND_LOOKAROUND constants.
+// v17.5				Added EE_AUTOFILL message, Editor_AutoFill inline function, AUTOFILL_INFO structure.
 //
 #pragma once
 
@@ -645,23 +652,23 @@ typedef void *HEEDOC;
 
 // EE_LOAD_FILE
 typedef struct _LOAD_FILE_INFO {
-	size_t cbSize;          // sizeof( LOAD_FILE_INFO )
-	UINT nCP;
-	BOOL bDetectUnicode;
-	BOOL bDetectAll;
-	BOOL bDetectCharset;
-	BOOL bDetectUTF8;
+    size_t cbSize;          // sizeof( LOAD_FILE_INFO )
+    UINT nCP;
+    BOOL bDetectUnicode;
+    BOOL bDetectAll;
+    BOOL bDetectCharset;
+    BOOL bDetectUTF8;
 } LOAD_FILE_INFO;
 
 // EE_LOAD_FILE_EX
 typedef struct _LOAD_FILE_INFO_EX {
-	size_t cbSize;          // sizeof( LOAD_FILE_INFO_EX )
-	UINT nCP;
-	BOOL bDetectUnicode;
-	BOOL bDetectAll;
-	BOOL bDetectCharset;
-	BOOL bDetectUTF8;
-	UINT nFlags;
+    size_t cbSize;          // sizeof( LOAD_FILE_INFO_EX )
+    UINT nCP;
+    BOOL bDetectUnicode;
+    BOOL bDetectAll;
+    BOOL bDetectCharset;
+    BOOL bDetectUTF8;
+    UINT nFlags;
 } LOAD_FILE_INFO_EX;
 
 // EE_LOAD_FILE_EX_V2
@@ -684,21 +691,21 @@ typedef struct _LOAD_FILE_INFO_EX_V2 {
 #define FLAG_LF_ONLY	2
 
 typedef struct _GET_LINE_INFO {
-	UINT_PTR	cch;		// in
-	UINT		flags;		// in
-	UINT_PTR	yLine;		// in
+    UINT_PTR	cch;		// in
+    UINT		flags;		// in
+    UINT_PTR	yLine;		// in
 	BYTE		byteCrLf;	// out (valid only when flags contains FLAG_GET_CRLF_BYTE)
 } GET_LINE_INFO;
 
 typedef struct _GREP_INFOW {
-	size_t  cbSize;         // sizeof( GREP_INFOW )
-	UINT    nCP;
-	UINT    nFlags;
-	LPCWSTR pszFind;
-	LPCWSTR pszReplace;
-	LPCWSTR pszPath;
-	LPCWSTR pszBackupPath;
-	LPCWSTR pszFilesToIgnore;
+    size_t  cbSize;         // sizeof( GREP_INFOW )
+    UINT    nCP;
+    UINT    nFlags;
+    LPCWSTR pszFind;
+    LPCWSTR pszReplace;
+    LPCWSTR pszPath;
+    LPCWSTR pszBackupPath;
+    LPCWSTR pszFilesToIgnore;
 } GREP_INFOW;
 
 typedef struct _GREP_INFO_EX {
@@ -713,14 +720,14 @@ typedef struct _GREP_INFO_EX {
 } GREP_INFO_EX;
 
 typedef struct _GREP_INFOA {
-	size_t  cbSize;         // sizeof( GREP_INFOA )
-	UINT    nCP;
-	UINT    nFlags;
-	LPCSTR  pszFind;
-	LPCSTR  pszReplace;
-	LPCSTR  pszPath;
-	LPCSTR  pszBackupPath;
-	LPCSTR  pszFilesToIgnore;
+    size_t  cbSize;         // sizeof( GREP_INFOA )
+    UINT    nCP;
+    UINT    nFlags;
+    LPCSTR  pszFind;
+    LPCSTR  pszReplace;
+    LPCSTR  pszPath;
+    LPCSTR  pszBackupPath;
+    LPCSTR  pszFilesToIgnore;
 } GREP_INFOA;
 
 typedef struct _MATCH_REGEX_INFO {
@@ -813,14 +820,14 @@ typedef struct _CUSTOM_BAR_CLOSE_INFO {
 #if (defined(_WIN64) || defined(_W64))
 typedef struct tagPOINT_PTR
 {
-	LONG_PTR  x;
-	LONG_PTR  y;
+    LONG_PTR  x;
+    LONG_PTR  y;
 } POINT_PTR, *PPOINT_PTR;
 
 typedef struct tagSIZE_PTR
 {
-	LONG_PTR  cx;
-	LONG_PTR  cy;
+    LONG_PTR  cx;
+    LONG_PTR  cy;
 } SIZE_PTR, *PSIZE_PTR;
 
 //#define LONG_PTR_MIN		LLONG_MIN
@@ -828,14 +835,14 @@ typedef struct tagSIZE_PTR
 #else
 typedef struct tagPOINT_PTR
 {
-	LONG  x;
-	LONG  y;
+    LONG  x;
+    LONG  y;
 } POINT_PTR, *PPOINT_PTR;
 
 typedef struct tagSIZE_PTR
 {
-	LONG  cx;
-	LONG  cy;
+    LONG  cx;
+    LONG  cy;
 } SIZE_PTR, *PSIZE_PTR;
 
 #define LONG_PTR_MIN		LONG_MIN
@@ -844,21 +851,21 @@ typedef struct tagSIZE_PTR
 
 typedef struct tagPOINT64
 {
-	INT64  x;
-	INT64  y;
+    INT64  x;
+    INT64  y;
 } POINT64, *PPOINT64;
 
 
 class CPointPtr : public tagPOINT_PTR
 {
 public:
-	// Constructors
+// Constructors
 	CPointPtr();
 	CPointPtr(int initX, int initY);
 	CPointPtr(POINT initPt);
 	CPointPtr(SIZE initSize);
 
-	// Operations
+// Operations
 	void Offset(int xOffset, int yOffset);
 	void Offset(POINT point);
 	void Offset(SIZE size);
@@ -870,14 +877,14 @@ public:
 	void operator -=(POINT point);
 	void SetPoint(int X, int Y);
 
-	// Operators returning CPointPtr values
+// Operators returning CPointPtr values
 	CPointPtr operator +(SIZE size) const;
 	CPointPtr operator -(SIZE size) const;
 	CPointPtr operator -() const;
 	CPointPtr operator +(POINT point) const;
 
-	// Operators returning CSize values
-	//	CSize operator -(POINT point) const;
+// Operators returning CSize values
+//	CSize operator -(POINT point) const;
 
 };
 
@@ -953,9 +960,9 @@ typedef struct _TOOLBAR_INFO {
 	UINT	cxIdeal;
 	UINT	nBand;
 	WORD	wPlugInCmdID;
-	//	UINT	cyChild;
-	//	UINT	cyMaxChild;
-	//	UINT	cyIntegral;
+//	UINT	cyChild;
+//	UINT	cyMaxChild;
+//	UINT	cyIntegral;
 } TOOLBAR_INFO;
 
 typedef struct _REG_SET_VALUE_INFO {
@@ -992,14 +999,14 @@ typedef struct _PROCESS_INFO {
 
 #define EE_FIRST                (WM_USER+0x400)
 #define EE_GET_CMD_ID           (EE_FIRST+0)
-// (HINSTANCE)lParam = hInstance
-// returns (UINT)nCmdID
+  // (HINSTANCE)lParam = hInstance
+  // returns (UINT)nCmdID
 
 #ifdef EE_STRICT
-inline UINT Editor_GetCmdID(HWND hwnd, HINSTANCE hInstance)
+inline UINT Editor_GetCmdID( HWND hwnd, HINSTANCE hInstance )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (UINT)SNDMSG(hwnd, EE_GET_CMD_ID, 0, (LPARAM)hInstance);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (UINT)SNDMSG( hwnd, EE_GET_CMD_ID, 0, (LPARAM)hInstance );
 }
 #else
 #define Editor_GetCmdID( hwnd, hInstance ) \
@@ -1007,14 +1014,14 @@ inline UINT Editor_GetCmdID(HWND hwnd, HINSTANCE hInstance)
 #endif
 
 #define EE_QUERY_STATUS         (EE_FIRST+1)
-// (UINT)wParam = nCmdID, (BOOL*)lParam = &bChecked
-// returns (BOOL)bEnabled
+  // (UINT)wParam = nCmdID, (BOOL*)lParam = &bChecked
+  // returns (BOOL)bEnabled
 
 #ifdef EE_STRICT
-inline BOOL Editor_QueryStatus(HWND hwnd, UINT nCmdID, BOOL* pbChecked)
+inline BOOL Editor_QueryStatus( HWND hwnd, UINT nCmdID, BOOL* pbChecked )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG(hwnd, EE_QUERY_STATUS, (WPARAM)nCmdID, (LPARAM)pbChecked);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (BOOL)SNDMSG( hwnd, EE_QUERY_STATUS, (WPARAM)nCmdID, (LPARAM)pbChecked );
 }
 #else
 #define Editor_QueryStatus( hwnd, nCmdID, pbChecked ) \
@@ -1022,13 +1029,13 @@ inline BOOL Editor_QueryStatus(HWND hwnd, UINT nCmdID, BOOL* pbChecked)
 #endif
 
 #define EE_UPDATE_TOOLBAR       (EE_FIRST+2)
-// (UINT)wParam = nCmdID
+  // (UINT)wParam = nCmdID
 
 #ifdef EE_STRICT
-inline void Editor_UpdateToolbar(HWND hwnd, UINT nCmdID)
+inline void Editor_UpdateToolbar( HWND hwnd, UINT nCmdID )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG(hwnd, EE_UPDATE_TOOLBAR, (WPARAM)nCmdID, 0);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    SNDMSG( hwnd, EE_UPDATE_TOOLBAR, (WPARAM)nCmdID, 0 );
 }
 #else
 #define Editor_UpdateToolbar( hwnd, nCmdID ) \
@@ -1036,14 +1043,14 @@ inline void Editor_UpdateToolbar(HWND hwnd, UINT nCmdID)
 #endif
 
 #define EE_GET_SEL_TEXTA        (EE_FIRST+3)
-// (UINT_PTR)wParam = nBufferSize, (LPSTR)lParam = szBuffer
-// returns (UINT_PTR)nRequiredBufferSize
+  // (UINT_PTR)wParam = nBufferSize, (LPSTR)lParam = szBuffer
+  // returns (UINT_PTR)nRequiredBufferSize
 
 #ifdef EE_STRICT
-inline UINT_PTR Editor_GetSelTextA(HWND hwnd, UINT_PTR nBufferSize, LPSTR szBuffer)
+inline UINT_PTR Editor_GetSelTextA( HWND hwnd, UINT_PTR nBufferSize, LPSTR szBuffer )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (UINT_PTR)SNDMSG(hwnd, EE_GET_SEL_TEXTA, (WPARAM)nBufferSize, (LPARAM)szBuffer);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (UINT_PTR)SNDMSG( hwnd, EE_GET_SEL_TEXTA, (WPARAM)nBufferSize, (LPARAM)szBuffer );
 }
 #else
 #define Editor_GetSelTextA( hwnd, nBufferSize, szBuffer ) \
@@ -1051,13 +1058,13 @@ inline UINT_PTR Editor_GetSelTextA(HWND hwnd, UINT_PTR nBufferSize, LPSTR szBuff
 #endif
 
 #define EE_GET_SEL_TEXTW        (EE_FIRST+46)
-// (UINT_PTR)wParam = nBufferSize, (LPWSTR)lParam = szBuffer
-// returns (UINT_PTR)nRequiredBufferSize
+  // (UINT_PTR)wParam = nBufferSize, (LPWSTR)lParam = szBuffer
+  // returns (UINT_PTR)nRequiredBufferSize
 #ifdef EE_STRICT
-inline UINT_PTR Editor_GetSelTextW(HWND hwnd, UINT_PTR nBufferSize, LPWSTR szBuffer)
+inline UINT_PTR Editor_GetSelTextW( HWND hwnd, UINT_PTR nBufferSize, LPWSTR szBuffer )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (UINT_PTR)SNDMSG(hwnd, EE_GET_SEL_TEXTW, (WPARAM)nBufferSize, (LPARAM)szBuffer);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (UINT_PTR)SNDMSG( hwnd, EE_GET_SEL_TEXTW, (WPARAM)nBufferSize, (LPARAM)szBuffer );
 }
 #else
 #define Editor_GetSelTextW( hwnd, nBufferSize, szBuffer ) \
@@ -1065,20 +1072,20 @@ inline UINT_PTR Editor_GetSelTextW(HWND hwnd, UINT_PTR nBufferSize, LPWSTR szBuf
 #endif
 
 #define EE_GET_LINES            (EE_FIRST+4)
-// wParam = MAKEWPARAM( nLogical, iDoc+1 )
-// returns (UINT_PTR)nTotalLines
+  // wParam = MAKEWPARAM( nLogical, iDoc+1 )
+  // returns (UINT_PTR)nTotalLines
 
-inline UINT_PTR Editor_DocGetLines(HWND hwnd, int iDoc, int nLogical)
+inline UINT_PTR Editor_DocGetLines( HWND hwnd, int iDoc, int nLogical )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (UINT_PTR)SNDMSG(hwnd, EE_GET_LINES, (WPARAM)MAKEWPARAM(nLogical, iDoc + 1), (LPARAM)0);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (UINT_PTR)SNDMSG( hwnd, EE_GET_LINES, (WPARAM)MAKEWPARAM( nLogical, iDoc+1 ), (LPARAM)0 );
 }
 
 #ifdef EE_STRICT
-inline UINT_PTR Editor_GetLines(HWND hwnd, int nLogical)
+inline UINT_PTR Editor_GetLines( HWND hwnd, int nLogical )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (UINT_PTR)SNDMSG(hwnd, EE_GET_LINES, (WPARAM)(int)(nLogical), (LPARAM)0);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (UINT_PTR)SNDMSG( hwnd, EE_GET_LINES, (WPARAM)(int)(nLogical), (LPARAM)0 );
 }
 #else
 #define Editor_GetLines( hwnd, nLogical ) \
@@ -1086,14 +1093,14 @@ inline UINT_PTR Editor_GetLines(HWND hwnd, int nLogical)
 #endif
 
 #define EE_GET_LINEA            (EE_FIRST+5)
-// (GET_LINE_INFO*)wParam = pGetLineInfo, (LPSTR)lParam = szString
-// returns (UINT_PTR)nRequiredBufferSize
+  // (GET_LINE_INFO*)wParam = pGetLineInfo, (LPSTR)lParam = szString
+  // returns (UINT_PTR)nRequiredBufferSize
 
 #ifdef EE_STRICT
-inline UINT_PTR Editor_GetLineA(HWND hwnd, GET_LINE_INFO* pGetLineInfo, LPSTR szString)
+inline UINT_PTR Editor_GetLineA( HWND hwnd, GET_LINE_INFO* pGetLineInfo, LPSTR szString )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (UINT_PTR)SNDMSG((hwnd), EE_GET_LINEA, (WPARAM)(GET_LINE_INFO*)(pGetLineInfo), (LPARAM)(LPSTR)(szString));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (UINT_PTR)SNDMSG( (hwnd), EE_GET_LINEA, (WPARAM)(GET_LINE_INFO*)(pGetLineInfo), (LPARAM)(LPSTR)(szString) );
 }
 #else
 #define Editor_GetLineA( hwnd, pGetLineInfo, szString ) \
@@ -1101,14 +1108,14 @@ inline UINT_PTR Editor_GetLineA(HWND hwnd, GET_LINE_INFO* pGetLineInfo, LPSTR sz
 #endif
 
 #define EE_GET_LINEW            (EE_FIRST+47)
-// (GET_LINE_INFO*)wParam = pGetLineInfo, (LPWSTR)lParam = szString
-// returns (UINT_PTR)nRequiredBufferSize
+  // (GET_LINE_INFO*)wParam = pGetLineInfo, (LPWSTR)lParam = szString
+  // returns (UINT_PTR)nRequiredBufferSize
 
 #ifdef EE_STRICT
-inline UINT_PTR Editor_GetLineW(HWND hwnd, GET_LINE_INFO* pGetLineInfo, LPWSTR szString)
+inline UINT_PTR Editor_GetLineW( HWND hwnd, GET_LINE_INFO* pGetLineInfo, LPWSTR szString )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (UINT_PTR)SNDMSG((hwnd), EE_GET_LINEW, (WPARAM)(GET_LINE_INFO*)(pGetLineInfo), (LPARAM)(LPWSTR)(szString));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (UINT_PTR)SNDMSG( (hwnd), EE_GET_LINEW, (WPARAM)(GET_LINE_INFO*)(pGetLineInfo), (LPARAM)(LPWSTR)(szString) );
 }
 #else
 #define Editor_GetLineW( hwnd, pGetLineInfo, szString ) \
@@ -1116,13 +1123,13 @@ inline UINT_PTR Editor_GetLineW(HWND hwnd, GET_LINE_INFO* pGetLineInfo, LPWSTR s
 #endif
 
 #define EE_GET_CARET_POS        (EE_FIRST+6)
-// (int)wParam = nLogical, (POINT_PTR*)lParam = pptPos
+  // (int)wParam = nLogical, (POINT_PTR*)lParam = pptPos
 
 #ifdef EE_STRICT
-inline void Editor_GetCaretPos(HWND hwnd, int nLogical, POINT_PTR* pptPos)
+inline void Editor_GetCaretPos( HWND hwnd, int nLogical, POINT_PTR* pptPos )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG(hwnd, EE_GET_CARET_POS, (WPARAM)nLogical, (LPARAM)pptPos);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    SNDMSG( hwnd, EE_GET_CARET_POS, (WPARAM)nLogical, (LPARAM)pptPos );
 }
 #else
 #define Editor_GetCaretPos( hwnd, nLogical, pptPos ) \
@@ -1130,13 +1137,13 @@ inline void Editor_GetCaretPos(HWND hwnd, int nLogical, POINT_PTR* pptPos)
 #endif
 
 #define EE_DEV_TO_VIEW          (EE_FIRST+7)
-// (POINT_PTR*)wParam = pptDev, (POINT_PTR*)lParam = pptView
+  // (POINT_PTR*)wParam = pptDev, (POINT_PTR*)lParam = pptView
 
 #ifdef EE_STRICT
-inline void Editor_DevToView(HWND hwnd, POINT_PTR* pptDev, POINT_PTR* pptView)
+inline void Editor_DevToView( HWND hwnd, POINT_PTR* pptDev, POINT_PTR* pptView )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_DEV_TO_VIEW, (WPARAM)(POINT_PTR*)(pptDev), (LPARAM)(POINT_PTR*)(pptView));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    SNDMSG( (hwnd), EE_DEV_TO_VIEW, (WPARAM)(POINT_PTR*)(pptDev), (LPARAM)(POINT_PTR*)(pptView) );
 }
 #else
 #define Editor_DevToView( hwnd, pptDev, pptView ) \
@@ -1144,13 +1151,13 @@ inline void Editor_DevToView(HWND hwnd, POINT_PTR* pptDev, POINT_PTR* pptView)
 #endif
 
 #define EE_GET_PAGE_SIZE        (EE_FIRST+8)
-// (SIZE_PTR*)lParam = psizePage
+  // (SIZE_PTR*)lParam = psizePage
 
 #ifdef EE_STRICT
-inline void Editor_GetPageSize(HWND hwnd, SIZE_PTR* psizePage)
+inline void Editor_GetPageSize( HWND hwnd, SIZE_PTR* psizePage )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_GET_PAGE_SIZE, (WPARAM)0, (LPARAM)(SIZE_PTR*)(psizePage));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    SNDMSG( (hwnd), EE_GET_PAGE_SIZE, (WPARAM)0, (LPARAM)(SIZE_PTR*)(psizePage) );
 }
 #else
 #define Editor_GetPageSize( hwnd, psizePage ) \
@@ -1158,13 +1165,13 @@ inline void Editor_GetPageSize(HWND hwnd, SIZE_PTR* psizePage)
 #endif
 
 #define EE_GET_SCROLL_POS       (EE_FIRST+9)
-// (POINT_PTR*)lParam = pptPos
+  // (POINT_PTR*)lParam = pptPos
 
 #ifdef EE_STRICT
-inline void Editor_GetScrollPos(HWND hwnd, POINT_PTR* pptPos)
+inline void Editor_GetScrollPos( HWND hwnd, POINT_PTR* pptPos )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_GET_SCROLL_POS, (WPARAM)0, (LPARAM)(POINT_PTR*)(pptPos));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    SNDMSG( (hwnd), EE_GET_SCROLL_POS, (WPARAM)0, (LPARAM)(POINT_PTR*)(pptPos) );
 }
 #else
 #define Editor_GetScrollPos( hwnd, pptPos ) \
@@ -1172,14 +1179,14 @@ inline void Editor_GetScrollPos(HWND hwnd, POINT_PTR* pptPos)
 #endif
 
 #define EE_LINE_FROM_CHAR       (EE_FIRST+10)
-// (int)wParam = nLogical, (UINT_PTR)lParam = nSerialIndex
-// returns (UINT_PTR)yLine
+  // (int)wParam = nLogical, (UINT_PTR)lParam = nSerialIndex
+  // returns (UINT_PTR)yLine
 
 #ifdef EE_STRICT
-inline UINT_PTR Editor_LineFromChar(HWND hwnd, int nLogical, UINT_PTR nSerialIndex)
+inline UINT_PTR Editor_LineFromChar( HWND hwnd, int nLogical, UINT_PTR nSerialIndex )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (UINT_PTR)SNDMSG((hwnd), EE_LINE_FROM_CHAR, (WPARAM)(int)(nLogical), (LPARAM)(UINT_PTR)(nSerialIndex));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (UINT_PTR)SNDMSG( (hwnd), EE_LINE_FROM_CHAR, (WPARAM)(int)(nLogical), (LPARAM)(UINT_PTR)(nSerialIndex) );
 }
 #else
 #define Editor_LineFromChar( hwnd, nLogical, nSerialIndex ) \
@@ -1187,14 +1194,14 @@ inline UINT_PTR Editor_LineFromChar(HWND hwnd, int nLogical, UINT_PTR nSerialInd
 #endif
 
 #define EE_LINE_INDEX           (EE_FIRST+11)
-// (BOOL)wParam = bLogical, (UINT_PTR)lParam = yLine
-// returns (UINT_PTR)nSerialIndex
+  // (BOOL)wParam = bLogical, (UINT_PTR)lParam = yLine
+  // returns (UINT_PTR)nSerialIndex
 
 #ifdef EE_STRICT
-inline UINT_PTR Editor_LineIndex(HWND hwnd, BOOL bLogical, UINT_PTR yLine)
+inline UINT_PTR Editor_LineIndex( HWND hwnd, BOOL bLogical, UINT_PTR yLine )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (UINT_PTR)SNDMSG((hwnd), EE_LINE_INDEX, (WPARAM)(BOOL)(bLogical), (LPARAM)(UINT_PTR)(yLine));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (UINT_PTR)SNDMSG( (hwnd), EE_LINE_INDEX, (WPARAM)(BOOL)(bLogical), (LPARAM)(UINT_PTR)(yLine) );
 }
 #else
 #define Editor_LineIndex( hwnd, bLogical, yLine ) \
@@ -1202,15 +1209,15 @@ inline UINT_PTR Editor_LineIndex(HWND hwnd, BOOL bLogical, UINT_PTR yLine)
 #endif
 
 #define EE_LOAD_FILEA           (EE_FIRST+12)
-// (LOAD_FILE_INFO_EX*)wParam = plfi
-// (LPCSTR)lParam = szFileName
-// returns non-zero if success, 0 if failed
+  // (LOAD_FILE_INFO_EX*)wParam = plfi
+  // (LPCSTR)lParam = szFileName
+  // returns non-zero if success, 0 if failed
 
 #ifdef EE_STRICT
-inline BOOL Editor_LoadFileA(HWND hwnd, LOAD_FILE_INFO_EX* plfi, LPCSTR szFileName)
+inline BOOL Editor_LoadFileA( HWND hwnd, LOAD_FILE_INFO_EX* plfi, LPCSTR szFileName )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG((hwnd), EE_LOAD_FILEA, (WPARAM)plfi, (LPARAM)(LPCSTR)(szFileName));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (BOOL)SNDMSG( (hwnd), EE_LOAD_FILEA, (WPARAM)plfi, (LPARAM)(LPCSTR)(szFileName) );
 }
 #else
 #define Editor_LoadFileA( hwnd, plfi, szFileName ) \
@@ -1218,15 +1225,15 @@ inline BOOL Editor_LoadFileA(HWND hwnd, LOAD_FILE_INFO_EX* plfi, LPCSTR szFileNa
 #endif
 
 #define EE_LOAD_FILEW           (EE_FIRST+48)
-// (LOAD_FILE_INFO_EX*)wParam = plfi
-// (LPCWSTR)lParam = szFileName
-// returns non-zero if success, 0 if failed
+  // (LOAD_FILE_INFO_EX*)wParam = plfi
+  // (LPCWSTR)lParam = szFileName
+  // returns non-zero if success, 0 if failed
 
 #ifdef EE_STRICT
-inline BOOL Editor_LoadFileW(HWND hwnd, LOAD_FILE_INFO_EX* plfi, LPCWSTR szFileName)
+inline BOOL Editor_LoadFileW( HWND hwnd, LOAD_FILE_INFO_EX* plfi, LPCWSTR szFileName )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG((hwnd), EE_LOAD_FILEW, (WPARAM)plfi, (LPARAM)(LPCWSTR)(szFileName));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (BOOL)SNDMSG( (hwnd), EE_LOAD_FILEW, (WPARAM)plfi, (LPARAM)(LPCWSTR)(szFileName) );
 }
 #else
 #define Editor_LoadFileW( hwnd, plfi, szFileName ) \
@@ -1234,10 +1241,10 @@ inline BOOL Editor_LoadFileW(HWND hwnd, LOAD_FILE_INFO_EX* plfi, LPCWSTR szFileN
 #endif
 
 #ifdef EE_STRICT
-inline BOOL Editor_LoadFileW(HWND hwnd, LOAD_FILE_INFO_EX_V2* plfi, LPCWSTR szFileName)
+inline BOOL Editor_LoadFileW( HWND hwnd, LOAD_FILE_INFO_EX_V2* plfi, LPCWSTR szFileName )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG((hwnd), EE_LOAD_FILEW, (WPARAM)plfi, (LPARAM)(LPCWSTR)(szFileName));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+	return (BOOL)SNDMSG( (hwnd), EE_LOAD_FILEW, (WPARAM)plfi, (LPARAM)(LPCWSTR)(szFileName) );
 }
 #else
 #define Editor_LoadFileW( hwnd, plfi, szFileName ) \
@@ -1245,14 +1252,14 @@ inline BOOL Editor_LoadFileW(HWND hwnd, LOAD_FILE_INFO_EX_V2* plfi, LPCWSTR szFi
 #endif
 
 #define EE_LOGICAL_TO_SERIAL    (EE_FIRST+13)
-// (POINT_PTR*)lParam = pptLogical
-// returns (UINT_PTR)nSerialIndex
+  // (POINT_PTR*)lParam = pptLogical
+  // returns (UINT_PTR)nSerialIndex
 
 #ifdef EE_STRICT
-inline UINT_PTR Editor_LogicalToSerial(HWND hwnd, POINT_PTR* pptLogical)
+inline UINT_PTR Editor_LogicalToSerial( HWND hwnd, POINT_PTR* pptLogical )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (UINT_PTR)SNDMSG((hwnd), EE_LOGICAL_TO_SERIAL, (WPARAM)0, (LPARAM)(POINT_PTR*)(pptLogical));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (UINT_PTR)SNDMSG( (hwnd), EE_LOGICAL_TO_SERIAL, (WPARAM)0, (LPARAM)(POINT_PTR*)(pptLogical) );
 }
 #else
 #define Editor_LogicalToSerial( hwnd, pptLogical ) \
@@ -1260,13 +1267,13 @@ inline UINT_PTR Editor_LogicalToSerial(HWND hwnd, POINT_PTR* pptLogical)
 #endif
 
 #define EE_LOGICAL_TO_VIEW      (EE_FIRST+14)
-// (POINT_PTR*)wParam = pptLogical, (POINT_PTR*)lParam = pptView
+  // (POINT_PTR*)wParam = pptLogical, (POINT_PTR*)lParam = pptView
 
 #ifdef EE_STRICT
-inline void Editor_LogicalToView(HWND hwnd, POINT_PTR* pptLogical, POINT_PTR* pptView)
+inline void Editor_LogicalToView( HWND hwnd, POINT_PTR* pptLogical, POINT_PTR* pptView )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_LOGICAL_TO_VIEW, (WPARAM)(POINT_PTR*)(pptLogical), (LPARAM)(POINT_PTR*)(pptView));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    SNDMSG( (hwnd), EE_LOGICAL_TO_VIEW, (WPARAM)(POINT_PTR*)(pptLogical), (LPARAM)(POINT_PTR*)(pptView) );
 }
 #else
 #define Editor_LogicalToView( hwnd, pptLogical, pptView ) \
@@ -1274,14 +1281,14 @@ inline void Editor_LogicalToView(HWND hwnd, POINT_PTR* pptLogical, POINT_PTR* pp
 #endif
 
 #define EE_SAVE_FILEA           (EE_FIRST+16)
-// (BOOL)wParam = bReplace, (LPSTR)lParam = szFileName
-// returns non-zero if success, 0 if failed
+  // (BOOL)wParam = bReplace, (LPSTR)lParam = szFileName
+  // returns non-zero if success, 0 if failed
 
 #ifdef EE_STRICT
-inline BOOL Editor_SaveFileA(HWND hwnd, BOOL bReplace, LPSTR szFileName)
+inline BOOL Editor_SaveFileA( HWND hwnd, BOOL bReplace, LPSTR szFileName )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG((hwnd), EE_SAVE_FILEA, (WPARAM)(BOOL)(bReplace), (LPARAM)(LPSTR)(szFileName));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (BOOL)SNDMSG( (hwnd), EE_SAVE_FILEA, (WPARAM)(BOOL)(bReplace), (LPARAM)(LPSTR)(szFileName) );
 }
 #else
 #define Editor_SaveFileA( hwnd, bReplace, szFileName ) \
@@ -1289,10 +1296,10 @@ inline BOOL Editor_SaveFileA(HWND hwnd, BOOL bReplace, LPSTR szFileName)
 #endif
 
 #ifdef EE_STRICT
-inline BOOL Editor_DocSaveFileA(HWND hwnd, int iDoc, BOOL bReplace, LPSTR szFileName)
+inline BOOL Editor_DocSaveFileA( HWND hwnd, int iDoc, BOOL bReplace, LPSTR szFileName )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG((hwnd), EE_SAVE_FILEA, MAKEWPARAM((bReplace), (iDoc)+1), (LPARAM)(LPSTR)(szFileName));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (BOOL)SNDMSG( (hwnd), EE_SAVE_FILEA, MAKEWPARAM((bReplace), (iDoc)+1), (LPARAM)(LPSTR)(szFileName) );
 }
 #else
 #define Editor_DocSaveFileA( hwnd, iDoc, bReplace, szFileName ) \
@@ -1300,14 +1307,14 @@ inline BOOL Editor_DocSaveFileA(HWND hwnd, int iDoc, BOOL bReplace, LPSTR szFile
 #endif
 
 #define EE_SAVE_FILEW           (EE_FIRST+49)
-// (BOOL)wParam = bReplace, (LPWSTR)lParam = szFileName
-// returns non-zero if success, 0 if failed
+  // (BOOL)wParam = bReplace, (LPWSTR)lParam = szFileName
+  // returns non-zero if success, 0 if failed
 
 #ifdef EE_STRICT
-inline BOOL Editor_SaveFileW(HWND hwnd, BOOL bReplace, LPWSTR szFileName)
+inline BOOL Editor_SaveFileW( HWND hwnd, BOOL bReplace, LPWSTR szFileName )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG((hwnd), EE_SAVE_FILEW, (WPARAM)(BOOL)(bReplace), (LPARAM)(LPWSTR)(szFileName));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (BOOL)SNDMSG( (hwnd), EE_SAVE_FILEW, (WPARAM)(BOOL)(bReplace), (LPARAM)(LPWSTR)(szFileName) );
 }
 #else
 #define Editor_SaveFileW( hwnd, bReplace, szFileName ) \
@@ -1315,10 +1322,10 @@ inline BOOL Editor_SaveFileW(HWND hwnd, BOOL bReplace, LPWSTR szFileName)
 #endif
 
 #ifdef EE_STRICT
-inline BOOL Editor_DocSaveFileW(HWND hwnd, int iDoc, BOOL bReplace, LPWSTR szFileName)
+inline BOOL Editor_DocSaveFileW( HWND hwnd, int iDoc, BOOL bReplace, LPWSTR szFileName )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG((hwnd), EE_SAVE_FILEW, MAKEWPARAM((bReplace), (iDoc)+1), (LPARAM)(LPWSTR)(szFileName));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (BOOL)SNDMSG( (hwnd), EE_SAVE_FILEW, MAKEWPARAM((bReplace), (iDoc)+1), (LPARAM)(LPWSTR)(szFileName) );
 }
 #else
 #define Editor_DocSaveFileW( hwnd, iDoc, bReplace, szFileName ) \
@@ -1326,13 +1333,13 @@ inline BOOL Editor_DocSaveFileW(HWND hwnd, int iDoc, BOOL bReplace, LPWSTR szFil
 #endif
 
 #define EE_SERIAL_TO_LOGICAL    (EE_FIRST+17)
-// (UINT_PTR)wParam = nSerial, (POINT_PTR*)lParam = pptLogical
+  // (UINT_PTR)wParam = nSerial, (POINT_PTR*)lParam = pptLogical
 
 #ifdef EE_STRICT
-inline void Editor_SerialToLogical(HWND hwnd, UINT_PTR nSerial, POINT_PTR* pptLogical)
+inline void Editor_SerialToLogical( HWND hwnd, UINT_PTR nSerial, POINT_PTR* pptLogical )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_SERIAL_TO_LOGICAL, (WPARAM)(UINT_PTR)(nSerial), (LPARAM)(POINT_PTR*)(pptLogical));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    SNDMSG( (hwnd), EE_SERIAL_TO_LOGICAL, (WPARAM)(UINT_PTR)(nSerial), (LPARAM)(POINT_PTR*)(pptLogical) );
 }
 #else
 #define Editor_SerialToLogical( hwnd, nSerial, pptLogical ) \
@@ -1340,14 +1347,14 @@ inline void Editor_SerialToLogical(HWND hwnd, UINT_PTR nSerial, POINT_PTR* pptLo
 #endif
 
 #define EE_SET_CARET_POS        (EE_FIRST+18)
-// wParam = MAKEWPARAM( nLogical, bExtend )
-// (POINT_PTR*)lParam = pptPos
+  // wParam = MAKEWPARAM( nLogical, bExtend )
+  // (POINT_PTR*)lParam = pptPos
 
 #ifdef EE_STRICT
-inline void Editor_SetCaretPos(HWND hwnd, int nLogical, POINT_PTR* pptPos)
+inline void Editor_SetCaretPos( HWND hwnd, int nLogical, POINT_PTR* pptPos )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_SET_CARET_POS, (WPARAM)(int)(nLogical), (LPARAM)(POINT_PTR*)(pptPos));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    SNDMSG( (hwnd), EE_SET_CARET_POS, (WPARAM)(int)(nLogical), (LPARAM)(POINT_PTR*)(pptPos) );
 }
 #else
 #define Editor_SetCaretPos( hwnd, nLogical, pptPos ) \
@@ -1355,10 +1362,10 @@ inline void Editor_SetCaretPos(HWND hwnd, int nLogical, POINT_PTR* pptPos)
 #endif
 
 #ifdef EE_STRICT
-inline void Editor_SetCaretPosEx(HWND hwnd, int nLogical, POINT_PTR* pptPos, BOOL bExtend)
+inline void Editor_SetCaretPosEx( HWND hwnd, int nLogical, POINT_PTR* pptPos, BOOL bExtend )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_SET_CARET_POS, MAKEWPARAM(nLogical, bExtend), (LPARAM)(POINT_PTR*)(pptPos));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    SNDMSG( (hwnd), EE_SET_CARET_POS, MAKEWPARAM(nLogical, bExtend), (LPARAM)(POINT_PTR*)(pptPos) );
 }
 #else
 #define Editor_SetCaretPosEx( hwnd, nLogical, pptPos, bExtend ) \
@@ -1366,14 +1373,14 @@ inline void Editor_SetCaretPosEx(HWND hwnd, int nLogical, POINT_PTR* pptPos, BOO
 #endif
 
 #define EE_SET_SCROLL_POS       (EE_FIRST+19)
-// (BOOL)wParam = bCanMoveCursor
-// (POINT_PTR*)lParam = pptPos
+  // (BOOL)wParam = bCanMoveCursor
+  // (POINT_PTR*)lParam = pptPos
 
 #ifdef EE_STRICT
-inline void Editor_SetScrollPos(HWND hwnd, POINT_PTR* pptPos)
+inline void Editor_SetScrollPos( HWND hwnd, POINT_PTR* pptPos )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_SET_SCROLL_POS, (WPARAM)0, (LPARAM)(POINT_PTR*)(pptPos));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    SNDMSG( (hwnd), EE_SET_SCROLL_POS, (WPARAM)0, (LPARAM)(POINT_PTR*)(pptPos) );
 }
 #else
 #define Editor_SetScrollPos( hwnd, pptPos ) \
@@ -1381,10 +1388,10 @@ inline void Editor_SetScrollPos(HWND hwnd, POINT_PTR* pptPos)
 #endif
 
 #ifdef EE_STRICT
-inline void Editor_SetScrollPosEx(HWND hwnd, POINT_PTR* pptPos, BOOL bCanMoveCursor)
+inline void Editor_SetScrollPosEx( HWND hwnd, POINT_PTR* pptPos, BOOL bCanMoveCursor )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_SET_SCROLL_POS, (WPARAM)(BOOL)bCanMoveCursor, (LPARAM)(POINT_PTR*)(pptPos));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    SNDMSG( (hwnd), EE_SET_SCROLL_POS, (WPARAM)(BOOL)bCanMoveCursor, (LPARAM)(POINT_PTR*)(pptPos) );
 }
 #else
 #define Editor_SetScrollPosEx( hwnd, pptPos, bCanMoveCursor ) \
@@ -1392,13 +1399,13 @@ inline void Editor_SetScrollPosEx(HWND hwnd, POINT_PTR* pptPos, BOOL bCanMoveCur
 #endif
 
 #define EE_VIEW_TO_DEV          (EE_FIRST+20)
-// (POINT_PTR*)wParam = pptView, (POINT_PTR*)lParam = pptDev
+  // (POINT_PTR*)wParam = pptView, (POINT_PTR*)lParam = pptDev
 
 #ifdef EE_STRICT
-inline void Editor_ViewToDev(HWND hwnd, POINT_PTR* pptView, POINT_PTR* pptDev)
+inline void Editor_ViewToDev( HWND hwnd, POINT_PTR* pptView, POINT_PTR* pptDev )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_VIEW_TO_DEV, (WPARAM)(POINT_PTR*)(pptView), (LPARAM)(POINT_PTR*)(pptDev));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    SNDMSG( (hwnd), EE_VIEW_TO_DEV, (WPARAM)(POINT_PTR*)(pptView), (LPARAM)(POINT_PTR*)(pptDev) );
 }
 #else
 #define Editor_ViewToDev( hwnd, pptView, pptDev ) \
@@ -1406,13 +1413,13 @@ inline void Editor_ViewToDev(HWND hwnd, POINT_PTR* pptView, POINT_PTR* pptDev)
 #endif
 
 #define EE_VIEW_TO_LOGICAL      (EE_FIRST+21)
-// (POINT*)wParam = pptView, (POINT*)lParam = pptLogical
+  // (POINT*)wParam = pptView, (POINT*)lParam = pptLogical
 
 #ifdef EE_STRICT
-inline void Editor_ViewToLogical(HWND hwnd, const POINT_PTR* pptView, POINT_PTR* pptLogical)
+inline void Editor_ViewToLogical( HWND hwnd, const POINT_PTR* pptView, POINT_PTR* pptLogical )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_VIEW_TO_LOGICAL, (WPARAM)(const POINT_PTR*)(pptView), (LPARAM)(POINT_PTR*)(pptLogical));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    SNDMSG( (hwnd), EE_VIEW_TO_LOGICAL, (WPARAM)(const POINT_PTR*)(pptView), (LPARAM)(POINT_PTR*)(pptLogical ) );
 }
 #else
 #define Editor_ViewToLogical( hwnd, pptView, pptLogical ) \
@@ -1420,13 +1427,13 @@ inline void Editor_ViewToLogical(HWND hwnd, const POINT_PTR* pptView, POINT_PTR*
 #endif
 
 #define EE_EXEC_COMMAND         (EE_FIRST+22)
-// (UINT)wParam = nCmdID
+  // (UINT)wParam = nCmdID
 
 #ifdef EE_STRICT
-inline BOOL Editor_ExecCommand(HWND hwnd, UINT nCmdID)
+inline BOOL Editor_ExecCommand( HWND hwnd, UINT nCmdID )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG((hwnd), EE_EXEC_COMMAND, (WPARAM)(UINT)(nCmdID), (LPARAM)0);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (BOOL)SNDMSG( (hwnd), EE_EXEC_COMMAND, (WPARAM)(UINT)(nCmdID), (LPARAM)0 );
 }
 #else
 #define Editor_ExecCommand( hwnd, nCmdID ) \
@@ -1434,13 +1441,13 @@ inline BOOL Editor_ExecCommand(HWND hwnd, UINT nCmdID)
 #endif
 
 #define EE_GET_MODIFIED         (EE_FIRST+23)
-// returns (BOOL)bModified
+  // returns (BOOL)bModified
 
 #ifdef EE_STRICT
-inline BOOL Editor_GetModified(HWND hwnd)
+inline BOOL Editor_GetModified( HWND hwnd )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG((hwnd), EE_GET_MODIFIED, (WPARAM)0, (LPARAM)0);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (BOOL)SNDMSG( (hwnd), EE_GET_MODIFIED, (WPARAM)0, (LPARAM)0 );
 }
 #else
 #define Editor_GetModified( hwnd ) \
@@ -1448,10 +1455,10 @@ inline BOOL Editor_GetModified(HWND hwnd)
 #endif
 
 #ifdef EE_STRICT
-inline BOOL Editor_DocGetModified(HWND hwnd, int iDoc)
+inline BOOL Editor_DocGetModified( HWND hwnd, int iDoc )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG((hwnd), EE_GET_MODIFIED, MAKEWPARAM(0, (iDoc)+1), (LPARAM)0);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (BOOL)SNDMSG( (hwnd), EE_GET_MODIFIED, MAKEWPARAM(0, (iDoc)+1), (LPARAM)0 );
 }
 #else
 #define Editor_DocGetModified( hwnd, iDoc ) \
@@ -1459,13 +1466,13 @@ inline BOOL Editor_DocGetModified(HWND hwnd, int iDoc)
 #endif
 
 #define EE_SET_MODIFIED         (EE_FIRST+24)
-// (BOOL)wParam = bModified
+  // (BOOL)wParam = bModified
 
 #ifdef EE_STRICT
-inline void Editor_SetModified(HWND hwnd, BOOL bModified)
+inline void Editor_SetModified( HWND hwnd, BOOL bModified )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	(void)SNDMSG((hwnd), EE_SET_MODIFIED, (WPARAM)(BOOL)(bModified), (LPARAM)0);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    (void)SNDMSG( (hwnd), EE_SET_MODIFIED, (WPARAM)(BOOL)(bModified), (LPARAM)0 );
 }
 #else
 #define Editor_SetModified( hwnd, bModified ) \
@@ -1473,14 +1480,14 @@ inline void Editor_SetModified(HWND hwnd, BOOL bModified)
 #endif
 
 #define EE_GET_SEL_START        (EE_FIRST+26)
-// (int)wParam = nLogical
-// (POINT_PTR*)lParam = pptPos
+  // (int)wParam = nLogical
+  // (POINT_PTR*)lParam = pptPos
 
 #ifdef EE_STRICT
-inline void Editor_GetSelStart(HWND hwnd, int nLogical, POINT_PTR* pptPos)
+inline void Editor_GetSelStart( HWND hwnd, int nLogical, POINT_PTR* pptPos )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_GET_SEL_START, (WPARAM)(int)(nLogical), (LPARAM)(POINT_PTR*)(pptPos));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    SNDMSG( (hwnd), EE_GET_SEL_START, (WPARAM)(int)(nLogical), (LPARAM)(POINT_PTR*)(pptPos) );
 }
 #else
 #define Editor_GetSelStart( hwnd, nLogical, pptPos ) \
@@ -1488,14 +1495,14 @@ inline void Editor_GetSelStart(HWND hwnd, int nLogical, POINT_PTR* pptPos)
 #endif
 
 #define EE_GET_SEL_END          (EE_FIRST+27)
-// (int)wParam = nLogical
-// (POINT_PTR*)lParam = pptPos
+  // (int)wParam = nLogical
+  // (POINT_PTR*)lParam = pptPos
 
 #ifdef EE_STRICT
-inline void Editor_GetSelEnd(HWND hwnd, int nLogical, POINT_PTR* pptPos)
+inline void Editor_GetSelEnd( HWND hwnd, int nLogical, POINT_PTR* pptPos )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_GET_SEL_END, (WPARAM)(int)(nLogical), (LPARAM)(POINT_PTR*)(pptPos));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    SNDMSG( (hwnd), EE_GET_SEL_END, (WPARAM)(int)(nLogical), (LPARAM)(POINT_PTR*)(pptPos) );
 }
 #else
 #define Editor_GetSelEnd( hwnd, nLogical, pptPos ) \
@@ -1503,13 +1510,13 @@ inline void Editor_GetSelEnd(HWND hwnd, int nLogical, POINT_PTR* pptPos)
 #endif
 
 #define EE_SET_SEL_LENGTH       (EE_FIRST+28)
-// (UINT_PTR)wParam = nLen
+  // (UINT_PTR)wParam = nLen
 
 #ifdef EE_STRICT
-inline void Editor_SetSelLength(HWND hwnd, UINT_PTR nLen)
+inline void Editor_SetSelLength( HWND hwnd, UINT_PTR nLen )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	(void)SNDMSG((hwnd), EE_SET_SEL_LENGTH, (WPARAM)(UINT_PTR)(nLen), (LPARAM)0);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    (void)SNDMSG( (hwnd), EE_SET_SEL_LENGTH, (WPARAM)(UINT_PTR)(nLen), (LPARAM)0 );
 }
 #else
 #define Editor_SetSelLength( hwnd, nLen ) \
@@ -1517,13 +1524,13 @@ inline void Editor_SetSelLength(HWND hwnd, UINT_PTR nLen)
 #endif
 
 #define EE_GET_CONFIGA          (EE_FIRST+29)
-// (LPSTR)lParam = szConfigName
+  // (LPSTR)lParam = szConfigName
 
 #ifdef EE_STRICT
-inline void Editor_GetConfigA(HWND hwnd, LPSTR szConfigName)
+inline void Editor_GetConfigA( HWND hwnd, LPSTR szConfigName )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_GET_CONFIGA, (WPARAM)0, (LPARAM)(LPSTR)(szConfigName));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    SNDMSG( (hwnd), EE_GET_CONFIGA, (WPARAM)0, (LPARAM)(LPSTR)(szConfigName) );
 }
 #else
 #define Editor_GetConfigA( hwnd, szConfigName ) \
@@ -1531,10 +1538,10 @@ inline void Editor_GetConfigA(HWND hwnd, LPSTR szConfigName)
 #endif
 
 #ifdef EE_STRICT
-inline void Editor_DocGetConfigA(HWND hwnd, int iDoc, LPSTR szConfigName)
+inline void Editor_DocGetConfigA( HWND hwnd, int iDoc, LPSTR szConfigName )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_GET_CONFIGA, (WPARAM)MAKEWPARAM(0, (iDoc)+1), (LPARAM)(LPSTR)(szConfigName));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    SNDMSG( (hwnd), EE_GET_CONFIGA, (WPARAM)MAKEWPARAM(0, (iDoc)+1), (LPARAM)(LPSTR)(szConfigName) );
 }
 #else
 #define Editor_DocGetConfigA( hwnd, iDoc, szConfigName ) \
@@ -1542,13 +1549,13 @@ inline void Editor_DocGetConfigA(HWND hwnd, int iDoc, LPSTR szConfigName)
 #endif
 
 #define EE_GET_CONFIGW          (EE_FIRST+50)
-// (LPWSTR)lParam = szConfigName
+  // (LPWSTR)lParam = szConfigName
 
 #ifdef EE_STRICT
-inline void Editor_GetConfigW(HWND hwnd, LPWSTR szConfigName)
+inline void Editor_GetConfigW( HWND hwnd, LPWSTR szConfigName )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_GET_CONFIGW, (WPARAM)0, (LPARAM)(LPWSTR)(szConfigName));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    SNDMSG( (hwnd), EE_GET_CONFIGW, (WPARAM)0, (LPARAM)(LPWSTR)(szConfigName) );
 }
 #else
 #define Editor_GetConfigW( hwnd, szConfigName ) \
@@ -1556,10 +1563,10 @@ inline void Editor_GetConfigW(HWND hwnd, LPWSTR szConfigName)
 #endif
 
 #ifdef EE_STRICT
-inline void Editor_DocGetConfigW(HWND hwnd, int iDoc, LPWSTR szConfigName)
+inline void Editor_DocGetConfigW( HWND hwnd, int iDoc, LPWSTR szConfigName )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_GET_CONFIGW, (WPARAM)MAKEWPARAM(0, (iDoc)+1), (LPARAM)(LPWSTR)(szConfigName));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    SNDMSG( (hwnd), EE_GET_CONFIGW, (WPARAM)MAKEWPARAM(0, (iDoc)+1), (LPARAM)(LPWSTR)(szConfigName) );
 }
 #else
 #define Editor_DocGetConfigW( hwnd, iDoc, szConfigName ) \
@@ -1567,13 +1574,13 @@ inline void Editor_DocGetConfigW(HWND hwnd, int iDoc, LPWSTR szConfigName)
 #endif
 
 #define EE_SET_CONFIGA          (EE_FIRST+30)
-// (LPCSTR)lParam = szConfigName
+  // (LPCSTR)lParam = szConfigName
 
 #ifdef EE_STRICT
-inline BOOL Editor_SetConfigA(HWND hwnd, LPSTR szConfigName)
+inline BOOL Editor_SetConfigA( HWND hwnd, LPSTR szConfigName )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG((hwnd), EE_SET_CONFIGA, (WPARAM)0, (LPARAM)(LPSTR)(szConfigName));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (BOOL)SNDMSG( (hwnd), EE_SET_CONFIGA, (WPARAM)0, (LPARAM)(LPSTR)(szConfigName) );
 }
 #else
 #define Editor_SetConfigA( hwnd, szConfigName ) \
@@ -1581,10 +1588,10 @@ inline BOOL Editor_SetConfigA(HWND hwnd, LPSTR szConfigName)
 #endif
 
 #ifdef EE_STRICT
-inline BOOL Editor_DocSetConfigA(HWND hwnd, int iDoc, LPSTR szConfigName)
+inline BOOL Editor_DocSetConfigA( HWND hwnd, int iDoc, LPSTR szConfigName )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG((hwnd), EE_SET_CONFIGA, (WPARAM)MAKEWPARAM(0, (iDoc)+1), (LPARAM)(LPSTR)(szConfigName));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (BOOL)SNDMSG( (hwnd), EE_SET_CONFIGA, (WPARAM)MAKEWPARAM(0, (iDoc)+1), (LPARAM)(LPSTR)(szConfigName) );
 }
 #else
 #define Editor_DocSetConfigA( hwnd, iDoc, szConfigName ) \
@@ -1592,13 +1599,13 @@ inline BOOL Editor_DocSetConfigA(HWND hwnd, int iDoc, LPSTR szConfigName)
 #endif
 
 #define EE_SET_CONFIGW          (EE_FIRST+51)
-// (LPCWSTR)lParam = szConfigName
+  // (LPCWSTR)lParam = szConfigName
 
 #ifdef EE_STRICT
-inline BOOL Editor_SetConfigW(HWND hwnd, LPWSTR szConfigName)
+inline BOOL Editor_SetConfigW( HWND hwnd, LPWSTR szConfigName )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG((hwnd), EE_SET_CONFIGW, (WPARAM)0, (LPARAM)(LPWSTR)(szConfigName));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (BOOL)SNDMSG( (hwnd), EE_SET_CONFIGW, (WPARAM)0, (LPARAM)(LPWSTR)(szConfigName) );
 }
 #else
 #define Editor_SetConfigW( hwnd, szConfigName ) \
@@ -1606,10 +1613,10 @@ inline BOOL Editor_SetConfigW(HWND hwnd, LPWSTR szConfigName)
 #endif
 
 #ifdef EE_STRICT
-inline BOOL Editor_DocSetConfigW(HWND hwnd, int iDoc, LPWSTR szConfigName)
+inline BOOL Editor_DocSetConfigW( HWND hwnd, int iDoc, LPWSTR szConfigName )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG((hwnd), EE_SET_CONFIGW, (WPARAM)MAKEWPARAM(0, (iDoc)+1), (LPARAM)(LPWSTR)(szConfigName));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (BOOL)SNDMSG( (hwnd), EE_SET_CONFIGW, (WPARAM)MAKEWPARAM(0, (iDoc)+1), (LPARAM)(LPWSTR)(szConfigName) );
 }
 #else
 #define Editor_DocSetConfigW( hwnd, iDoc, szConfigName ) \
@@ -1619,10 +1626,10 @@ inline BOOL Editor_DocSetConfigW(HWND hwnd, int iDoc, LPWSTR szConfigName)
 #define EE_EMPTY_UNDO_BUFFER    (EE_FIRST+31)
 
 #ifdef EE_STRICT
-inline void Editor_EmptyUndoBuffer(HWND hwnd)
+inline void Editor_EmptyUndoBuffer( HWND hwnd )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_EMPTY_UNDO_BUFFER, (WPARAM)0, (LPARAM)0);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    SNDMSG( (hwnd), EE_EMPTY_UNDO_BUFFER, (WPARAM)0, (LPARAM)0 );
 }
 #else
 #define Editor_EmptyUndoBuffer( hwnd ) \
@@ -1637,57 +1644,57 @@ inline void Editor_EmptyUndoBuffer(HWND hwnd)
 #define KEEP_DEST_RETURN_TYPE	0x00000010
 
 #define EE_INSERT_STRINGA       (EE_FIRST+32)
-// (int)wParam = nInsertType
-// (LPCSTR)lParam = szString
+  // (int)wParam = nInsertType
+  // (LPCSTR)lParam = szString
 
-inline void Editor_InsertStringA(HWND hwnd, LPCSTR szString, bool bKeepDestReturnType = false)
+inline void Editor_InsertStringA( HWND hwnd, LPCSTR szString, bool bKeepDestReturnType = false )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_INSERT_STRINGA, (WPARAM)OVERWRITE_PER_PROP | (bKeepDestReturnType ? KEEP_DEST_RETURN_TYPE : KEEP_SOURCE_RETURN_TYPE), (LPARAM)(LPCSTR)(szString));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    SNDMSG( (hwnd), EE_INSERT_STRINGA, (WPARAM)OVERWRITE_PER_PROP | (bKeepDestReturnType ? KEEP_DEST_RETURN_TYPE : KEEP_SOURCE_RETURN_TYPE), (LPARAM)(LPCSTR)(szString) );
 }
 
-inline void Editor_InsertA(HWND hwnd, LPCSTR szString, bool bKeepDestReturnType = false)
+inline void Editor_InsertA( HWND hwnd, LPCSTR szString, bool bKeepDestReturnType = false )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_INSERT_STRINGA, (WPARAM)OVERWRITE_INSERT | (bKeepDestReturnType ? KEEP_DEST_RETURN_TYPE : KEEP_SOURCE_RETURN_TYPE), (LPARAM)(LPCSTR)(szString));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    SNDMSG( (hwnd), EE_INSERT_STRINGA, (WPARAM)OVERWRITE_INSERT | (bKeepDestReturnType ? KEEP_DEST_RETURN_TYPE : KEEP_SOURCE_RETURN_TYPE), (LPARAM)(LPCSTR)(szString) );
 }
 
-inline void Editor_OverwriteA(HWND hwnd, LPCSTR szString, bool bKeepDestReturnType = false)
+inline void Editor_OverwriteA( HWND hwnd, LPCSTR szString, bool bKeepDestReturnType = false )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_INSERT_STRINGA, (WPARAM)OVERWRITE_OVERWRITE | (bKeepDestReturnType ? KEEP_DEST_RETURN_TYPE : KEEP_SOURCE_RETURN_TYPE), (LPARAM)(LPCSTR)(szString));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    SNDMSG( (hwnd), EE_INSERT_STRINGA, (WPARAM)OVERWRITE_OVERWRITE | (bKeepDestReturnType ? KEEP_DEST_RETURN_TYPE : KEEP_SOURCE_RETURN_TYPE), (LPARAM)(LPCSTR)(szString) );
 }
 
 #define EE_INSERT_STRINGW       (EE_FIRST+52)
-// (int)wParam = nInsertType | bKeepDestReturnType
-// (LPCWSTR)lParam = szString
+  // (int)wParam = nInsertType | bKeepDestReturnType
+  // (LPCWSTR)lParam = szString
 
-inline void Editor_InsertStringW(HWND hwnd, LPCWSTR szString, bool bKeepDestReturnType = false)
+inline void Editor_InsertStringW( HWND hwnd, LPCWSTR szString, bool bKeepDestReturnType = false )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_INSERT_STRINGW, (WPARAM)OVERWRITE_PER_PROP | (bKeepDestReturnType ? KEEP_DEST_RETURN_TYPE : KEEP_SOURCE_RETURN_TYPE), (LPARAM)(LPCWSTR)(szString));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    SNDMSG( (hwnd), EE_INSERT_STRINGW, (WPARAM)OVERWRITE_PER_PROP | (bKeepDestReturnType ? KEEP_DEST_RETURN_TYPE : KEEP_SOURCE_RETURN_TYPE), (LPARAM)(LPCWSTR)(szString) );
 }
 
-inline void Editor_InsertW(HWND hwnd, LPCWSTR szString, bool bKeepDestReturnType = false)
+inline void Editor_InsertW( HWND hwnd, LPCWSTR szString, bool bKeepDestReturnType = false )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_INSERT_STRINGW, (WPARAM)OVERWRITE_INSERT | (bKeepDestReturnType ? KEEP_DEST_RETURN_TYPE : KEEP_SOURCE_RETURN_TYPE), (LPARAM)(LPCWSTR)(szString));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+	SNDMSG( (hwnd), EE_INSERT_STRINGW, (WPARAM)OVERWRITE_INSERT | (bKeepDestReturnType ? KEEP_DEST_RETURN_TYPE : KEEP_SOURCE_RETURN_TYPE), (LPARAM)(LPCWSTR)(szString) );
 }
 
-inline void Editor_OverwriteW(HWND hwnd, LPCWSTR szString, bool bKeepDestReturnType = false)
+inline void Editor_OverwriteW( HWND hwnd, LPCWSTR szString, bool bKeepDestReturnType = false )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_INSERT_STRINGW, (WPARAM)OVERWRITE_OVERWRITE | (bKeepDestReturnType ? KEEP_DEST_RETURN_TYPE : KEEP_SOURCE_RETURN_TYPE), (LPARAM)(LPCWSTR)(szString));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    SNDMSG( (hwnd), EE_INSERT_STRINGW, (WPARAM)OVERWRITE_OVERWRITE | (bKeepDestReturnType ? KEEP_DEST_RETURN_TYPE : KEEP_SOURCE_RETURN_TYPE), (LPARAM)(LPCWSTR)(szString) );
 }
 
 #define EE_SET_SEL_VIEW         (EE_FIRST+33)
-// (POINT_PTR*)wParam = pptSelStart, (POINT_PTR*)lParam = pptSelEnd
+  // (POINT_PTR*)wParam = pptSelStart, (POINT_PTR*)lParam = pptSelEnd
 
 #ifdef EE_STRICT
-inline void Editor_SetSelView(HWND hwnd, POINT_PTR* pptSelStart, POINT_PTR* pptSelEnd)
+inline void Editor_SetSelView( HWND hwnd, POINT_PTR* pptSelStart, POINT_PTR* pptSelEnd )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_SET_SEL_VIEW, (WPARAM)(POINT_PTR*)(pptSelStart), (LPARAM)(POINT_PTR*)(pptSelEnd));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    SNDMSG( (hwnd), EE_SET_SEL_VIEW, (WPARAM)(POINT_PTR*)(pptSelStart), (LPARAM)(POINT_PTR*)(pptSelEnd) );
 }
 #else
 #define Editor_SetSelView( hwnd, pptSelStart, pptSelEnd ) \
@@ -1695,14 +1702,14 @@ inline void Editor_SetSelView(HWND hwnd, POINT_PTR* pptSelStart, POINT_PTR* pptS
 #endif
 
 #define EE_FINDA                (EE_FIRST+34)
-// (UINT)wParam = nFlags, (LPCSTR)lParam = szFind
-// returns (BOOL)bSuccess
+  // (UINT)wParam = nFlags, (LPCSTR)lParam = szFind
+  // returns (BOOL)bSuccess
 
 #ifdef EE_STRICT
-inline BOOL Editor_FindA(HWND hwnd, UINT nFlags, LPCSTR szFind)
+inline BOOL Editor_FindA( HWND hwnd, UINT nFlags, LPCSTR szFind )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG((hwnd), EE_FINDA, (WPARAM)(UINT)(nFlags), (LPARAM)(LPCSTR)(szFind));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (BOOL)SNDMSG( (hwnd), EE_FINDA, (WPARAM)(UINT)(nFlags), (LPARAM)(LPCSTR)(szFind) );
 }
 #else
 #define Editor_FindA( hwnd, nFlags, szFind ) \
@@ -1710,14 +1717,14 @@ inline BOOL Editor_FindA(HWND hwnd, UINT nFlags, LPCSTR szFind)
 #endif
 
 #define EE_FINDW                (EE_FIRST+53)
-// (UINT)wParam = nFlags, (LPCWSTR)lParam = szFind
-// returns (int)nCount
+  // (UINT)wParam = nFlags, (LPCWSTR)lParam = szFind
+  // returns (int)nCount
 
 #ifdef EE_STRICT
-inline int Editor_FindW(HWND hwnd, UINT nFlags, LPCWSTR szFind)
+inline int Editor_FindW( HWND hwnd, UINT nFlags, LPCWSTR szFind )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (int)SNDMSG((hwnd), EE_FINDW, (WPARAM)(UINT)(nFlags), (LPARAM)(LPCWSTR)(szFind));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (int)SNDMSG( (hwnd), EE_FINDW, (WPARAM)(UINT)(nFlags), (LPARAM)(LPCWSTR)(szFind) );
 }
 #else
 #define Editor_FindW( hwnd, nFlags, szFind ) \
@@ -1725,14 +1732,14 @@ inline int Editor_FindW(HWND hwnd, UINT nFlags, LPCWSTR szFind)
 #endif
 
 #define EE_REPLACEA             (EE_FIRST+35)
-// (UINT)wParam = nFlags, (LPCWSTR)lParam = szFindReplace
-// returns (int)nCount
+  // (UINT)wParam = nFlags, (LPCWSTR)lParam = szFindReplace
+  // returns (int)nCount
 
 #ifdef EE_STRICT
-inline int Editor_ReplaceA(HWND hwnd, UINT nFlags, LPCSTR szFindReplace)
+inline int Editor_ReplaceA( HWND hwnd, UINT nFlags, LPCSTR szFindReplace )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (int)SNDMSG((hwnd), EE_REPLACEA, (WPARAM)(UINT)(nFlags), (LPARAM)(LPCSTR)(szFindReplace));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (int)SNDMSG( (hwnd), EE_REPLACEA, (WPARAM)(UINT)(nFlags), (LPARAM)(LPCSTR)(szFindReplace) );
 }
 #else
 #define Editor_ReplaceA( hwnd, nFlags, szFindReplace ) \
@@ -1740,14 +1747,14 @@ inline int Editor_ReplaceA(HWND hwnd, UINT nFlags, LPCSTR szFindReplace)
 #endif
 
 #define EE_REPLACEW             (EE_FIRST+54)
-// (UINT)wParam = nFlags, (LPCWSTR)lParam = szFindReplace
-// returns (int)nCount
+  // (UINT)wParam = nFlags, (LPCWSTR)lParam = szFindReplace
+  // returns (int)nCount
 
 #ifdef EE_STRICT
-inline int Editor_ReplaceW(HWND hwnd, UINT nFlags, LPCWSTR szFindReplace)
+inline int Editor_ReplaceW( HWND hwnd, UINT nFlags, LPCWSTR szFindReplace )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (int)SNDMSG((hwnd), EE_REPLACEW, (WPARAM)(UINT)(nFlags), (LPARAM)(LPCWSTR)(szFindReplace));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (int)SNDMSG( (hwnd), EE_REPLACEW, (WPARAM)(UINT)(nFlags), (LPARAM)(LPCWSTR)(szFindReplace) );
 }
 #else
 #define Editor_ReplaceW( hwnd, nFlags, szFindReplace ) \
@@ -1755,13 +1762,13 @@ inline int Editor_ReplaceW(HWND hwnd, UINT nFlags, LPCWSTR szFindReplace)
 #endif
 
 #define EE_LOAD_CONFIGA         (EE_FIRST+36)
-// (LPCSTR)lParam = szConfigName
+  // (LPCSTR)lParam = szConfigName
 
 #ifdef EE_STRICT
-inline BOOL Editor_LoadConfigA(HWND hwnd, LPCSTR szConfigName)
+inline BOOL Editor_LoadConfigA( HWND hwnd, LPCSTR szConfigName )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG((hwnd), EE_LOAD_CONFIGA, (WPARAM)0, (LPARAM)(LPCSTR)(szConfigName));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (BOOL)SNDMSG( (hwnd), EE_LOAD_CONFIGA, (WPARAM)0, (LPARAM)(LPCSTR)(szConfigName) );
 }
 #else
 #define Editor_LoadConfigA( hwnd, szConfigName ) \
@@ -1769,13 +1776,13 @@ inline BOOL Editor_LoadConfigA(HWND hwnd, LPCSTR szConfigName)
 #endif
 
 #define EE_LOAD_CONFIGW         (EE_FIRST+55)
-// (LPCWSTR)lParam = szConfigName
+  // (LPCWSTR)lParam = szConfigName
 
 #ifdef EE_STRICT
-inline BOOL Editor_LoadConfigW(HWND hwnd, LPCWSTR szConfigName)
+inline BOOL Editor_LoadConfigW( HWND hwnd, LPCWSTR szConfigName )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG((hwnd), EE_LOAD_CONFIGW, (WPARAM)0, (LPARAM)(LPCWSTR)(szConfigName));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (BOOL)SNDMSG( (hwnd), EE_LOAD_CONFIGW, (WPARAM)0, (LPARAM)(LPCWSTR)(szConfigName) );
 }
 #else
 #define Editor_LoadConfigW( hwnd, szConfigName ) \
@@ -1783,13 +1790,13 @@ inline BOOL Editor_LoadConfigW(HWND hwnd, LPCWSTR szConfigName)
 #endif
 
 #define EE_SET_STATUSA          (EE_FIRST+37)
-// (LPCSTR)lParam = szStatus
+  // (LPCSTR)lParam = szStatus
 
 #ifdef EE_STRICT
-inline void Editor_SetStatusA(HWND hwnd, LPCSTR szStatus)
+inline void Editor_SetStatusA( HWND hwnd, LPCSTR szStatus )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_SET_STATUSA, (WPARAM)0, (LPARAM)(LPCSTR)(szStatus));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    SNDMSG( (hwnd), EE_SET_STATUSA, (WPARAM)0, (LPARAM)(LPCSTR)(szStatus) );
 }
 #else
 #define Editor_SetStatusA( hwnd, szStatus ) \
@@ -1797,13 +1804,13 @@ inline void Editor_SetStatusA(HWND hwnd, LPCSTR szStatus)
 #endif
 
 #define EE_SET_STATUSW          (EE_FIRST+56)
-// (LPCWSTR)lParam = szStatus
+  // (LPCWSTR)lParam = szStatus
 
 #ifdef EE_STRICT
-inline void Editor_SetStatusW(HWND hwnd, LPCWSTR szStatus)
+inline void Editor_SetStatusW( HWND hwnd, LPCWSTR szStatus )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_SET_STATUSW, (WPARAM)0, (LPARAM)(LPCWSTR)(szStatus));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    SNDMSG( (hwnd), EE_SET_STATUSW, (WPARAM)0, (LPARAM)(LPCWSTR)(szStatus) );
 }
 #else
 #define Editor_SetStatusW( hwnd, szStatus ) \
@@ -1811,13 +1818,13 @@ inline void Editor_SetStatusW(HWND hwnd, LPCWSTR szStatus)
 #endif
 
 #define EE_CONVERT              (EE_FIRST+38)
-// (UINT)wParam = nFlags
+  // (UINT)wParam = nFlags
 
 #ifdef EE_STRICT
-inline BOOL Editor_Convert(HWND hwnd, UINT nFlags)
+inline BOOL Editor_Convert( HWND hwnd, UINT nFlags )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG((hwnd), EE_CONVERT, (WPARAM)(UINT)(nFlags), (LPARAM)0);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (BOOL)SNDMSG( (hwnd), EE_CONVERT, (WPARAM)(UINT)(nFlags), (LPARAM)0 );
 }
 #else
 #define Editor_Convert( hwnd, nFlags ) \
@@ -1825,13 +1832,13 @@ inline BOOL Editor_Convert(HWND hwnd, UINT nFlags)
 #endif
 
 #define EE_GET_MARGIN           (EE_FIRST+39)
-// returns (UINT_PTR)nMaxMargin
+  // returns (UINT_PTR)nMaxMargin
 
 #ifdef EE_STRICT
-inline UINT_PTR Editor_GetMargin(HWND hwnd)
+inline UINT_PTR Editor_GetMargin( HWND hwnd )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (UINT_PTR)SNDMSG((hwnd), EE_GET_MARGIN, (WPARAM)0, (LPARAM)0);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (UINT_PTR)SNDMSG( (hwnd), EE_GET_MARGIN, (WPARAM)0, (LPARAM)0 );
 }
 #else
 #define Editor_GetMargin( hwnd ) \
@@ -1839,14 +1846,14 @@ inline UINT_PTR Editor_GetMargin(HWND hwnd)
 #endif
 
 #define EE_GET_VERSION          (EE_FIRST+40)
-// (UINT*)wParam = pnProductType
-// returns (UINT)nVersion
+  // (UINT*)wParam = pnProductType
+  // returns (UINT)nVersion
 
 #ifdef EE_STRICT
-inline UINT Editor_GetVersion(HWND hwnd)
+inline UINT Editor_GetVersion( HWND hwnd )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (UINT)SNDMSG((hwnd), EE_GET_VERSION, (WPARAM)0, (LPARAM)0);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (UINT)SNDMSG( (hwnd), EE_GET_VERSION, (WPARAM)0, (LPARAM)0 );
 }
 #else
 #define Editor_GetVersion( hwnd ) \
@@ -1854,10 +1861,10 @@ inline UINT Editor_GetVersion(HWND hwnd)
 #endif
 
 #ifdef EE_STRICT
-inline UINT Editor_GetVersionEx(HWND hwnd, UINT* pnProductType)
+inline UINT Editor_GetVersionEx( HWND hwnd, UINT* pnProductType )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (UINT)SNDMSG((hwnd), EE_GET_VERSION, (WPARAM)pnProductType, (LPARAM)0);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (UINT)SNDMSG( (hwnd), EE_GET_VERSION, (WPARAM)pnProductType, (LPARAM)0 );
 }
 #else
 #define Editor_GetVersionEx( hwnd, pnProductType ) \
@@ -1870,14 +1877,14 @@ inline UINT Editor_GetVersionEx(HWND hwnd, UINT* pnProductType)
 #define VERSION_STD             1
 
 #define EE_GET_REF              (EE_FIRST+41)
-// (ATOM)lParam = atom
-// return (int)nRef
+  // (ATOM)lParam = atom
+  // return (int)nRef
 
 #ifdef EE_STRICT
-inline int Editor_GetRef(HWND hwnd, ATOM atom)
+inline int Editor_GetRef( HWND hwnd, ATOM atom )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (int)SNDMSG((hwnd), EE_GET_REF, (WPARAM)0, (LPARAM)(ATOM)atom);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (int)SNDMSG( (hwnd), EE_GET_REF, (WPARAM)0, (LPARAM)(ATOM)atom );
 }
 #else
 #define Editor_GetRef( hwnd, atom ) \
@@ -1885,29 +1892,29 @@ inline int Editor_GetRef(HWND hwnd, ATOM atom)
 #endif
 
 #define EE_ADD_REF              (EE_FIRST+42)
-// (HINSTANCE)lParam = hInstance
-// return (int)nRef
+  // (HINSTANCE)lParam = hInstance
+  // return (int)nRef
 
 #ifdef EE_STRICT
-inline int Editor_AddRef(HWND hwnd, HINSTANCE hInstance)
+inline int Editor_AddRef( HWND hwnd, HINSTANCE hInstance )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (int)SNDMSG((hwnd), EE_ADD_REF, (WPARAM)0, (LPARAM)(HINSTANCE)hInstance);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (int)SNDMSG( (hwnd), EE_ADD_REF, (WPARAM)0, (LPARAM)(HINSTANCE)hInstance );
 }
 #else
 #define Editor_AddRef( hwnd, hInstance ) \
     (int)SNDMSG( (hwnd), EE_ADD_REF, (WPARAM)0, (LPARAM)(HINSTANCE)hInstance )
 #endif
-
+ 
 #define EE_RELEASE              (EE_FIRST+43)
-// (HINSTANCE)lParam = hInstance
-// return (int)nRef
-
+  // (HINSTANCE)lParam = hInstance
+  // return (int)nRef
+ 
 #ifdef EE_STRICT
-inline int Editor_Release(HWND hwnd, HINSTANCE hInstance)
+inline int Editor_Release( HWND hwnd, HINSTANCE hInstance )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (int)SNDMSG((hwnd), EE_RELEASE, (WPARAM)0, (LPARAM)(HINSTANCE)hInstance);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (int)SNDMSG( (hwnd), EE_RELEASE, (WPARAM)0, (LPARAM)(HINSTANCE)hInstance );
 }
 #else
 #define Editor_Release( hwnd, hInstance ) \
@@ -1915,13 +1922,13 @@ inline int Editor_Release(HWND hwnd, HINSTANCE hInstance)
 #endif
 
 #define EE_REDRAW               (EE_FIRST+44)
-// (BOOL)wParam = bRedraw
+  // (BOOL)wParam = bRedraw
 
 #ifdef EE_STRICT
-inline void Editor_Redraw(HWND hwnd, BOOL bRedraw)
+inline void Editor_Redraw( HWND hwnd, BOOL bRedraw )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_REDRAW, (WPARAM)bRedraw, (LPARAM)0);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    SNDMSG( (hwnd), EE_REDRAW, (WPARAM)bRedraw, (LPARAM)0 );
 }
 #else
 #define Editor_Redraw( hwnd, bRedraw ) \
@@ -1929,20 +1936,20 @@ inline void Editor_Redraw(HWND hwnd, BOOL bRedraw)
 #endif
 
 #define EE_GET_SEL_TYPE         (EE_FIRST+45)
-// (BOOL)wParam = bNeedAlways
-// return (int)nSelType
+  // (BOOL)wParam = bNeedAlways
+  // return (int)nSelType
 
 #ifdef EE_STRICT
-inline int Editor_GetSelType(HWND hwnd)
+inline int Editor_GetSelType( HWND hwnd )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (int)SNDMSG((hwnd), EE_GET_SEL_TYPE, (WPARAM)0, (LPARAM)0);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (int)SNDMSG( (hwnd), EE_GET_SEL_TYPE, (WPARAM)0, (LPARAM)0 );
 }
 
-inline int Editor_GetSelTypeEx(HWND hwnd, BOOL bNeedAlways)
+inline int Editor_GetSelTypeEx( HWND hwnd, BOOL bNeedAlways )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (int)SNDMSG((hwnd), EE_GET_SEL_TYPE, (WPARAM)(BOOL)bNeedAlways, (LPARAM)0);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (int)SNDMSG( (hwnd), EE_GET_SEL_TYPE, (WPARAM)(BOOL)bNeedAlways, (LPARAM)0 );
 }
 #else
 #define Editor_GetSelType( hwnd ) \
@@ -1953,14 +1960,14 @@ inline int Editor_GetSelTypeEx(HWND hwnd, BOOL bNeedAlways)
 #endif
 
 #define EE_IS_CHAR_HALF_OR_FULL (EE_FIRST+57)
-// (WCHAR)wParam = ch
-// return (int)nWidth
+  // (WCHAR)wParam = ch
+  // return (int)nWidth
 
 #ifdef EE_STRICT
-inline int Editor_IsCharHalfOrFull(HWND hwnd, WCHAR ch)
+inline int Editor_IsCharHalfOrFull( HWND hwnd, WCHAR ch )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (int)SNDMSG((hwnd), EE_IS_CHAR_HALF_OR_FULL, (WPARAM)ch, (LPARAM)0);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (int)SNDMSG( (hwnd), EE_IS_CHAR_HALF_OR_FULL, (WPARAM)ch, (LPARAM)0 );
 }
 #else
 #define Editor_IsCharHalfOrFull( hwnd, ch ) \
@@ -1968,15 +1975,15 @@ inline int Editor_IsCharHalfOrFull(HWND hwnd, WCHAR ch)
 #endif
 
 #define EE_INFO                 (EE_FIRST+58)
-// (int)wParam = nCmd
-// lParam = lParam
-// return lResult
+  // (int)wParam = nCmd
+  // lParam = lParam
+  // return lResult
 
 #ifdef EE_STRICT
-inline LRESULT Editor_Info(HWND hwnd, WPARAM nCmd, LPARAM lParam)
+inline LRESULT Editor_Info( HWND hwnd, WPARAM nCmd, LPARAM lParam )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (LRESULT)SNDMSG((hwnd), EE_INFO, (WPARAM)nCmd, (LPARAM)lParam);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (LRESULT)SNDMSG( (hwnd), EE_INFO, (WPARAM)nCmd, (LPARAM)lParam );
 }
 #else
 #define Editor_Info( hwnd, nCmd, lParam ) \
@@ -1984,10 +1991,10 @@ inline LRESULT Editor_Info(HWND hwnd, WPARAM nCmd, LPARAM lParam)
 #endif
 
 #ifdef EE_STRICT
-inline LRESULT Editor_DocInfo(HWND hwnd, int iDoc, WPARAM nCmd, LPARAM lParam)
+inline LRESULT Editor_DocInfo( HWND hwnd, int iDoc, WPARAM nCmd, LPARAM lParam )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (LRESULT)SNDMSG((hwnd), EE_INFO, (WPARAM)MAKEWPARAM((nCmd), (iDoc + 1)), (LPARAM)(lParam));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (LRESULT)SNDMSG( (hwnd), EE_INFO, (WPARAM)MAKEWPARAM((nCmd),(iDoc+1)), (LPARAM)(lParam) );
 }
 #else
 #define Editor_DocInfo( hwnd, iDoc, nCmd, lParam ) \
@@ -1995,14 +2002,14 @@ inline LRESULT Editor_DocInfo(HWND hwnd, int iDoc, WPARAM nCmd, LPARAM lParam)
 #endif
 
 #define EE_FREE                 (EE_FIRST+59)
-// (ATOM)lParam = atom
-// return (BOOL)bSuccess
+  // (ATOM)lParam = atom
+  // return (BOOL)bSuccess
 
 #ifdef EE_STRICT
-inline BOOL Editor_Free(HWND hwnd, ATOM atom)
+inline BOOL Editor_Free( HWND hwnd, ATOM atom )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG((hwnd), EE_FREE, (WPARAM)0, (LPARAM)(ATOM)atom);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (BOOL)SNDMSG( (hwnd), EE_FREE, (WPARAM)0, (LPARAM)(ATOM)atom );
 }
 #else
 #define Editor_Free( hwnd, atom ) \
@@ -2010,20 +2017,20 @@ inline BOOL Editor_Free(HWND hwnd, ATOM atom)
 #endif
 
 #define EE_SET_SEL_TYPE         (EE_FIRST+60)
-// (BOOL)wParam = bNeedAlways
-// (UINT)lParam = nSelType
+  // (BOOL)wParam = bNeedAlways
+  // (UINT)lParam = nSelType
 
 #ifdef EE_STRICT
-inline void Editor_SetSelType(HWND hwnd, UINT nSelType)
+inline void Editor_SetSelType( HWND hwnd, UINT nSelType )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_SET_SEL_TYPE, (WPARAM)0, (LPARAM)nSelType);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    SNDMSG( (hwnd), EE_SET_SEL_TYPE, (WPARAM)0, (LPARAM)nSelType );
 }
 
-inline void Editor_SetSelTypeEx(HWND hwnd, BOOL bNeedAlways, UINT nSelType)
+inline void Editor_SetSelTypeEx( HWND hwnd, BOOL bNeedAlways, UINT nSelType )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_SET_SEL_TYPE, (WPARAM)(BOOL)bNeedAlways, (LPARAM)nSelType);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    SNDMSG( (hwnd), EE_SET_SEL_TYPE, (WPARAM)(BOOL)bNeedAlways, (LPARAM)nSelType );
 }
 #else
 #define Editor_SetSelType( hwnd, nSelType ) \
@@ -2033,15 +2040,15 @@ inline void Editor_SetSelTypeEx(HWND hwnd, BOOL bNeedAlways, UINT nSelType)
 #endif
 
 #define EE_GET_STATUSA          (EE_FIRST+61)
-// (UINT_PTR)wParam = nBufSize
-// (LPSTR)lParam = szStatus
-// return (UINT_PTR)cchRequiredSize
+  // (UINT_PTR)wParam = nBufSize
+  // (LPSTR)lParam = szStatus
+  // return (UINT_PTR)cchRequiredSize
 
 #ifdef EE_STRICT
-inline UINT_PTR Editor_GetStatusA(HWND hwnd, LPCSTR szStatus, UINT_PTR nBufSize)
+inline UINT_PTR Editor_GetStatusA( HWND hwnd, LPCSTR szStatus, UINT_PTR nBufSize )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (UINT_PTR)SNDMSG((hwnd), EE_GET_STATUSA, (WPARAM)nBufSize, (LPARAM)(LPCSTR)(szStatus));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (UINT_PTR)SNDMSG( (hwnd), EE_GET_STATUSA, (WPARAM)nBufSize, (LPARAM)(LPCSTR)(szStatus) );
 }
 #else
 #define Editor_GetStatusA( hwnd, szStatus, nBufSize ) \
@@ -2049,15 +2056,15 @@ inline UINT_PTR Editor_GetStatusA(HWND hwnd, LPCSTR szStatus, UINT_PTR nBufSize)
 #endif
 
 #define EE_GET_STATUSW          (EE_FIRST+62)
-// (UINT_PTR)wParam = nBufSize
-// (LPWSTR)lParam = szStatus
-// return (UINT_PTR)cchRequiredSize
+  // (UINT_PTR)wParam = nBufSize
+  // (LPWSTR)lParam = szStatus
+  // return (UINT_PTR)cchRequiredSize
 
 #ifdef EE_STRICT
-inline UINT_PTR Editor_GetStatusW(HWND hwnd, LPCWSTR szStatus, UINT_PTR nBufSize)
+inline UINT_PTR Editor_GetStatusW( HWND hwnd, LPCWSTR szStatus, UINT_PTR nBufSize )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (UINT_PTR)SNDMSG((hwnd), EE_GET_STATUSW, (WPARAM)nBufSize, (LPARAM)(LPCWSTR)(szStatus));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (UINT_PTR)SNDMSG( (hwnd), EE_GET_STATUSW, (WPARAM)nBufSize, (LPARAM)(LPCWSTR)(szStatus) );
 }
 #else
 #define Editor_GetStatusW( hwnd, szStatus, nBufSize ) \
@@ -2065,15 +2072,15 @@ inline UINT_PTR Editor_GetStatusW(HWND hwnd, LPCWSTR szStatus, UINT_PTR nBufSize
 #endif
 
 #define EE_INSERT_FILEA         (EE_FIRST+63)
-// (LOAD_FILE_INFO_EX*)wParam = plfi
-// (LPCSTR)lParam = szFileName
-// returns non-zero if success, 0 if failed
+  // (LOAD_FILE_INFO_EX*)wParam = plfi
+  // (LPCSTR)lParam = szFileName
+  // returns non-zero if success, 0 if failed
 
 #ifdef EE_STRICT
-inline BOOL Editor_InsertFileA(HWND hwnd, LOAD_FILE_INFO_EX* plfi, LPCSTR szFileName)
+inline BOOL Editor_InsertFileA( HWND hwnd, LOAD_FILE_INFO_EX* plfi, LPCSTR szFileName )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG((hwnd), EE_INSERT_FILEA, (WPARAM)plfi, (LPARAM)(LPCSTR)(szFileName));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (BOOL)SNDMSG( (hwnd), EE_INSERT_FILEA, (WPARAM)plfi, (LPARAM)(LPCSTR)(szFileName) );
 }
 #else
 #define Editor_InsertFileA( hwnd, plfi, szFileName ) \
@@ -2081,15 +2088,15 @@ inline BOOL Editor_InsertFileA(HWND hwnd, LOAD_FILE_INFO_EX* plfi, LPCSTR szFile
 #endif
 
 #define EE_INSERT_FILEW         (EE_FIRST+64)
-// (LOAD_FILE_INFO_EX*)wParam = plfi
-// (LPCWSTR)lParam = szFileName
-// returns non-zero if success, 0 if failed
+  // (LOAD_FILE_INFO_EX*)wParam = plfi
+  // (LPCWSTR)lParam = szFileName
+  // returns non-zero if success, 0 if failed
 
 #ifdef EE_STRICT
-inline BOOL Editor_InsertFileW(HWND hwnd, LOAD_FILE_INFO_EX* plfi, LPCWSTR szFileName)
+inline BOOL Editor_InsertFileW( HWND hwnd, LOAD_FILE_INFO_EX* plfi, LPCWSTR szFileName )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG((hwnd), EE_INSERT_FILEW, (WPARAM)(LOAD_FILE_INFO_EX*)plfi, (LPARAM)(LPCWSTR)(szFileName));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (BOOL)SNDMSG( (hwnd), EE_INSERT_FILEW, (WPARAM)(LOAD_FILE_INFO_EX*)plfi, (LPARAM)(LPCWSTR)(szFileName) );
 }
 #else
 #define Editor_InsertFileW( hwnd, plfi, szFileName ) \
@@ -2097,14 +2104,14 @@ inline BOOL Editor_InsertFileW(HWND hwnd, LOAD_FILE_INFO_EX* plfi, LPCWSTR szFil
 #endif
 
 #define EE_FIND_IN_FILESA       (EE_FIRST+65)
-// wParam = 0
-// (GREP_INFOA*)lParam = pGrepInfo
+  // wParam = 0
+  // (GREP_INFOA*)lParam = pGrepInfo
 
 #ifdef EE_STRICT
-inline BOOL Editor_FindInFilesA(HWND hwnd, GREP_INFOA* pGrepInfo)
+inline BOOL Editor_FindInFilesA( HWND hwnd, GREP_INFOA* pGrepInfo )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG((hwnd), EE_FIND_IN_FILESA, (WPARAM)0, (LPARAM)(GREP_INFOA*)pGrepInfo);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (BOOL)SNDMSG( (hwnd), EE_FIND_IN_FILESA, (WPARAM)0, (LPARAM)(GREP_INFOA*)pGrepInfo );
 }
 #else
 #define Editor_FindInFilesA( hwnd, pGrepInfo ) \
@@ -2112,20 +2119,20 @@ inline BOOL Editor_FindInFilesA(HWND hwnd, GREP_INFOA* pGrepInfo)
 #endif
 
 #define EE_FIND_IN_FILESW       (EE_FIRST+66)
-// wParam = 0
-// (GREP_INFOW*)lParam = pGrepInfo
+  // wParam = 0
+  // (GREP_INFOW*)lParam = pGrepInfo
 
 #ifdef EE_STRICT
-inline BOOL Editor_FindInFilesW(HWND hwnd, GREP_INFOW* pGrepInfo)
+inline BOOL Editor_FindInFilesW( HWND hwnd, GREP_INFOW* pGrepInfo )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG((hwnd), EE_FIND_IN_FILESW, (WPARAM)0, (LPARAM)pGrepInfo);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (BOOL)SNDMSG( (hwnd), EE_FIND_IN_FILESW, (WPARAM)0, (LPARAM)pGrepInfo );
 }
 
-inline BOOL Editor_FindInFiles(HWND hwnd, GREP_INFO_EX* pGrepInfo)
+inline BOOL Editor_FindInFiles( HWND hwnd, GREP_INFO_EX* pGrepInfo )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG((hwnd), EE_FIND_IN_FILESW, (WPARAM)0, (LPARAM)pGrepInfo);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+	return (BOOL)SNDMSG( (hwnd), EE_FIND_IN_FILESW, (WPARAM)0, (LPARAM)pGrepInfo );
 }
 #else
 #define Editor_FindInFilesW( hwnd, pGrepInfo ) \
@@ -2133,14 +2140,14 @@ inline BOOL Editor_FindInFiles(HWND hwnd, GREP_INFO_EX* pGrepInfo)
 #endif
 
 #define EE_REPLACE_IN_FILESA        (EE_FIRST+67)
-// wParam = 0
-// (GREP_INFOA*)lParam = pGrepInfo
+  // wParam = 0
+  // (GREP_INFOA*)lParam = pGrepInfo
 
 #ifdef EE_STRICT
-inline BOOL Editor_ReplaceInFilesA(HWND hwnd, GREP_INFOA* pGrepInfo)
+inline BOOL Editor_ReplaceInFilesA( HWND hwnd, GREP_INFOA* pGrepInfo )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG((hwnd), EE_REPLACE_IN_FILESA, (WPARAM)0, (LPARAM)pGrepInfo);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (BOOL)SNDMSG( (hwnd), EE_REPLACE_IN_FILESA, (WPARAM)0, (LPARAM)pGrepInfo );
 }
 #else
 #define Editor_ReplaceInFilesA( hwnd, pGrepInfo ) \
@@ -2148,20 +2155,20 @@ inline BOOL Editor_ReplaceInFilesA(HWND hwnd, GREP_INFOA* pGrepInfo)
 #endif
 
 #define EE_REPLACE_IN_FILESW        (EE_FIRST+68)
-// wParam = 0
-// (GREP_INFOW*)lParam = pGrepInfo
+  // wParam = 0
+  // (GREP_INFOW*)lParam = pGrepInfo
 
 #ifdef EE_STRICT
-inline BOOL Editor_ReplaceInFilesW(HWND hwnd, GREP_INFOW* pGrepInfo)
+inline BOOL Editor_ReplaceInFilesW( HWND hwnd, GREP_INFOW* pGrepInfo )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG(hwnd, EE_REPLACE_IN_FILESW, (WPARAM)0, (LPARAM)pGrepInfo);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (BOOL)SNDMSG( hwnd, EE_REPLACE_IN_FILESW, (WPARAM)0, (LPARAM)pGrepInfo );
 }
 
-inline BOOL Editor_ReplaceInFiles(HWND hwnd, GREP_INFO_EX* pGrepInfo)
+inline BOOL Editor_ReplaceInFiles( HWND hwnd, GREP_INFO_EX* pGrepInfo )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG(hwnd, EE_REPLACE_IN_FILESW, (WPARAM)0, (LPARAM)pGrepInfo);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+	return (BOOL)SNDMSG( hwnd, EE_REPLACE_IN_FILESW, (WPARAM)0, (LPARAM)pGrepInfo );
 }
 #else
 #define Editor_ReplaceInFilesW( hwnd, pGrepInfo ) \
@@ -2169,14 +2176,14 @@ inline BOOL Editor_ReplaceInFiles(HWND hwnd, GREP_INFO_EX* pGrepInfo)
 #endif
 
 #define EE_GET_ANCHOR_POS           (EE_FIRST+69)
-// (int)wParam = nLogical
-// (POINT_PTR*)lParam = pptPos
+  // (int)wParam = nLogical
+  // (POINT_PTR*)lParam = pptPos
 
 #ifdef EE_STRICT
-inline void Editor_GetAnchorPos(HWND hwnd, int nLogical, POINT_PTR* pptPos)
+inline void Editor_GetAnchorPos( HWND hwnd, int nLogical, POINT_PTR* pptPos )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_GET_ANCHOR_POS, (WPARAM)(int)(nLogical), (LPARAM)(POINT_PTR*)(pptPos));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    SNDMSG( (hwnd), EE_GET_ANCHOR_POS, (WPARAM)(int)(nLogical), (LPARAM)(POINT_PTR*)(pptPos) );
 }
 #else
 #define Editor_GetAnchorPos( hwnd, nLogical, pptPos ) \
@@ -2184,14 +2191,14 @@ inline void Editor_GetAnchorPos(HWND hwnd, int nLogical, POINT_PTR* pptPos)
 #endif
 
 #define EE_SET_ANCHOR_POS           (EE_FIRST+70)
-// (int)wParam = nLogical
-// (POINT_PTR*)lParam = pptPos
+  // (int)wParam = nLogical
+  // (POINT_PTR*)lParam = pptPos
 
 #ifdef EE_STRICT
-inline void Editor_SetAnchorPos(HWND hwnd, int nLogical, POINT_PTR* pptPos)
+inline void Editor_SetAnchorPos( HWND hwnd, int nLogical, POINT_PTR* pptPos )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_SET_ANCHOR_POS, (WPARAM)(int)(nLogical), (LPARAM)(POINT_PTR*)(pptPos));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    SNDMSG( (hwnd), EE_SET_ANCHOR_POS, (WPARAM)(int)(nLogical), (LPARAM)(POINT_PTR*)(pptPos) );
 }
 #else
 #define Editor_SetAnchorPos( hwnd, nLogical, pptPos ) \
@@ -2201,10 +2208,10 @@ inline void Editor_SetAnchorPos(HWND hwnd, int nLogical, POINT_PTR* pptPos)
 #define EE_GET_REDRAW               (EE_FIRST+71)
 
 #ifdef EE_STRICT
-inline BOOL Editor_GetRedraw(HWND hwnd)
+inline BOOL Editor_GetRedraw( HWND hwnd )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG((hwnd), EE_GET_REDRAW, (WPARAM)0, (LPARAM)0);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (BOOL)SNDMSG( (hwnd), EE_GET_REDRAW, (WPARAM)0, (LPARAM)0 );
 }
 #else
 #define Editor_GetRedraw( hwnd ) \
@@ -2214,10 +2221,10 @@ inline BOOL Editor_GetRedraw(HWND hwnd)
 #define EE_DO_IDLE                  (EE_FIRST+72)
 
 #ifdef EE_STRICT
-inline void Editor_DoIdle(HWND hwnd, BOOL bResetTab)
+inline void Editor_DoIdle( HWND hwnd, BOOL bResetTab )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_DO_IDLE, (WPARAM)(bResetTab), (LPARAM)0);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    SNDMSG( (hwnd), EE_DO_IDLE, (WPARAM)(bResetTab), (LPARAM)0 );
 }
 #else
 #define Editor_DoIdle( hwnd, bResetTab ) \
@@ -2225,25 +2232,25 @@ inline void Editor_DoIdle(HWND hwnd, BOOL bResetTab)
 #endif
 
 #define	EE_CUSTOM_BAR_OPEN			(EE_FIRST+73)
-// (CUSTOM_BAR_INFO*)lParam = pCustomBarInfo
+  // (CUSTOM_BAR_INFO*)lParam = pCustomBarInfo
 
 #ifdef EE_STRICT
-inline UINT Editor_CustomBarOpen(HWND hwnd, CUSTOM_BAR_INFO* pCustomBarInfo)
+inline UINT Editor_CustomBarOpen( HWND hwnd, CUSTOM_BAR_INFO* pCustomBarInfo )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (UINT)SNDMSG((hwnd), EE_CUSTOM_BAR_OPEN, 0, (LPARAM)pCustomBarInfo);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (UINT)SNDMSG( (hwnd), EE_CUSTOM_BAR_OPEN, 0, (LPARAM)pCustomBarInfo );
 }
 #else
 #endif
 
 #define	EE_CUSTOM_BAR_CLOSE			(EE_FIRST+74)
-// (int)wParam = nCustomBarID
+  // (int)wParam = nCustomBarID
 
 #ifdef EE_STRICT
-inline BOOL Editor_CustomBarClose(HWND hwnd, UINT nCustomBarID)
+inline BOOL Editor_CustomBarClose( HWND hwnd, UINT nCustomBarID )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG((hwnd), EE_CUSTOM_BAR_CLOSE, (WPARAM)nCustomBarID, 0);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (BOOL)SNDMSG( (hwnd), EE_CUSTOM_BAR_CLOSE, (WPARAM)nCustomBarID, 0 );
 }
 #else
 #endif
@@ -2251,16 +2258,16 @@ inline BOOL Editor_CustomBarClose(HWND hwnd, UINT nCustomBarID)
 #define EE_MATCH_REGEX				(EE_FIRST+75)
 
 #ifdef EE_STRICT
-inline int Editor_MatchRegex(HWND hwnd, MATCH_REGEX_INFO* pMatchRegexInfo)
+inline int Editor_MatchRegex( HWND hwnd, MATCH_REGEX_INFO* pMatchRegexInfo )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (int)SNDMSG((hwnd), EE_MATCH_REGEX, (WPARAM)0, (LPARAM)pMatchRegexInfo);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+	return (int)SNDMSG( (hwnd), EE_MATCH_REGEX, (WPARAM)0, (LPARAM)pMatchRegexInfo );
 }
 
-inline int Editor_MatchRegex(HWND hwnd, MATCH_REGEX_INFO_EX* pMatchRegexInfo)
+inline int Editor_MatchRegex( HWND hwnd, MATCH_REGEX_INFO_EX* pMatchRegexInfo )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (int)SNDMSG((hwnd), EE_MATCH_REGEX, (WPARAM)0, (LPARAM)pMatchRegexInfo);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+	return (int)SNDMSG( (hwnd), EE_MATCH_REGEX, (WPARAM)0, (LPARAM)pMatchRegexInfo );
 }
 #else
 #define Editor_MatchRegex( hwnd, pMatchRegexInfo ) \
@@ -2270,16 +2277,16 @@ inline int Editor_MatchRegex(HWND hwnd, MATCH_REGEX_INFO_EX* pMatchRegexInfo)
 #define EE_FIND_REGEX				(EE_FIRST+76)
 
 #ifdef EE_STRICT
-inline BOOL Editor_FindRegex(HWND hwnd, FIND_REGEX_INFO* pFindRegexInfo)
+inline BOOL Editor_FindRegex( HWND hwnd, FIND_REGEX_INFO* pFindRegexInfo )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG((hwnd), EE_FIND_REGEX, (WPARAM)0, (LPARAM)pFindRegexInfo);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+	return (BOOL)SNDMSG( (hwnd), EE_FIND_REGEX, (WPARAM)0, (LPARAM)pFindRegexInfo );
 }
 
-inline BOOL Editor_FindRegex(HWND hwnd, FIND_REGEX_INFO_EX* pFindRegexInfo)
+inline BOOL Editor_FindRegex( HWND hwnd, FIND_REGEX_INFO_EX* pFindRegexInfo )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG((hwnd), EE_FIND_REGEX, (WPARAM)0, (LPARAM)pFindRegexInfo);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+	return (BOOL)SNDMSG( (hwnd), EE_FIND_REGEX, (WPARAM)0, (LPARAM)pFindRegexInfo );
 }
 #else
 #define Editor_FindRegex( hwnd, pFindRegexInfo ) \
@@ -2290,10 +2297,10 @@ inline BOOL Editor_FindRegex(HWND hwnd, FIND_REGEX_INFO_EX* pFindRegexInfo)
 // (INT_PTR)wParam = nLogicalLine
 // return nLevel
 
-inline int Editor_GetOutlineLevel(HWND hwnd, INT_PTR nLogicalLine)
+inline int Editor_GetOutlineLevel( HWND hwnd, INT_PTR nLogicalLine )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (int)SNDMSG((hwnd), EE_GET_OUTLINE_LEVEL, (WPARAM)nLogicalLine, (LPARAM)0);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+	return (int)SNDMSG( (hwnd), EE_GET_OUTLINE_LEVEL, (WPARAM)nLogicalLine, (LPARAM)0 );
 }
 
 #define EE_SET_OUTLINE_LEVEL		(EE_FIRST+78)
@@ -2301,20 +2308,20 @@ inline int Editor_GetOutlineLevel(HWND hwnd, INT_PTR nLogicalLine)
 // (int)lParam = nLevel
 // return nOldLevel
 
-inline int Editor_SetOutlineLevel(HWND hwnd, INT_PTR nLogicalLine, int nLevel)
+inline int Editor_SetOutlineLevel( HWND hwnd, INT_PTR nLogicalLine, int nLevel )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (int)SNDMSG((hwnd), EE_SET_OUTLINE_LEVEL, (WPARAM)nLogicalLine, (LPARAM)nLevel);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+	return (int)SNDMSG( (hwnd), EE_SET_OUTLINE_LEVEL, (WPARAM)nLogicalLine, (LPARAM)nLevel );
 }
 
 #define EE_SHOW_OUTLINE		(EE_FIRST+79)
 // (UINT)wParam = nFlags
 // return lResult
 
-inline void Editor_ShowOutline(HWND hwnd, WPARAM nFlags)
+inline void Editor_ShowOutline( HWND hwnd, WPARAM nFlags )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_SHOW_OUTLINE, (WPARAM)nFlags, (LPARAM)0);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+	SNDMSG( (hwnd), EE_SHOW_OUTLINE, (WPARAM)nFlags, (LPARAM)0 );
 }
 
 #define SHOW_OUTLINE_SHOW	1
@@ -2326,58 +2333,58 @@ inline void Editor_ShowOutline(HWND hwnd, WPARAM nFlags)
 // (LPWSTR)lParam = pBuf
 // return nSize
 
-inline size_t Editor_EnumConfig(HWND hwnd, LPWSTR pBuf, size_t cchBuf)
+inline size_t Editor_EnumConfig( HWND hwnd, LPWSTR pBuf, size_t cchBuf )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (size_t)SNDMSG((hwnd), EE_ENUM_CONFIG, (WPARAM)cchBuf, (LPARAM)pBuf);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+	return (size_t)SNDMSG( (hwnd), EE_ENUM_CONFIG, (WPARAM)cchBuf, (LPARAM)pBuf );
 }
 
 #define	EE_TOOLBAR_OPEN			(EE_FIRST+81)
-// (TOOLBAR_INFO*)lParam = pToolbarInfo
+  // (TOOLBAR_INFO*)lParam = pToolbarInfo
 
-inline UINT Editor_ToolbarOpen(HWND hwnd, TOOLBAR_INFO* pToolbarInfo)
+inline UINT Editor_ToolbarOpen( HWND hwnd, TOOLBAR_INFO* pToolbarInfo )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (UINT)SNDMSG((hwnd), EE_TOOLBAR_OPEN, 0, (LPARAM)pToolbarInfo);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (UINT)SNDMSG( (hwnd), EE_TOOLBAR_OPEN, 0, (LPARAM)pToolbarInfo );
 }
 
 #define	EE_TOOLBAR_CLOSE			(EE_FIRST+82)
-// (UINT)wParam = nToolbarID
+  // (UINT)wParam = nToolbarID
 
-inline BOOL Editor_ToolbarClose(HWND hwnd, UINT nCustomRebarID)
+inline BOOL Editor_ToolbarClose( HWND hwnd, UINT nCustomRebarID )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG((hwnd), EE_TOOLBAR_CLOSE, (WPARAM)nCustomRebarID, 0);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (BOOL)SNDMSG( (hwnd), EE_TOOLBAR_CLOSE, (WPARAM)nCustomRebarID, 0 );
 }
 
 #define	EE_TOOLBAR_SHOW			(EE_FIRST+83)
-// (UINT)wParam = nToolbarID
-// (BOOL)lParam = bVisible
+  // (UINT)wParam = nToolbarID
+  // (BOOL)lParam = bVisible
 
-inline BOOL Editor_ToolbarShow(HWND hwnd, UINT nCustomRebarID, BOOL bVisible)
+inline BOOL Editor_ToolbarShow( HWND hwnd, UINT nCustomRebarID, BOOL bVisible )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG((hwnd), EE_TOOLBAR_SHOW, (WPARAM)nCustomRebarID, (LPARAM)bVisible);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (BOOL)SNDMSG( (hwnd), EE_TOOLBAR_SHOW, (WPARAM)nCustomRebarID, (LPARAM)bVisible );
 }
 
 #define EE_HELP							(EE_FIRST+84)
-// (UINT)wParam = nFlag (must be 0)
-// (LPCTSTR)lParam = szPageURL
+  // (UINT)wParam = nFlag (must be 0)
+  // (LPCTSTR)lParam = szPageURL
 
-inline void Editor_Help(HWND hwnd, LPCTSTR szPageURL)
+inline void Editor_Help( HWND hwnd, LPCTSTR szPageURL )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_HELP, 0, (LPARAM)szPageURL);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    SNDMSG( (hwnd), EE_HELP, 0, (LPARAM)szPageURL );
 }
 
 #define EE_REG_SET_VALUE				(EE_FIRST+85)
-// (REG_SET_VALUE_INFO*)lParam = pRegSetValueInfo;
+  // (REG_SET_VALUE_INFO*)lParam = pRegSetValueInfo;
 
-inline LONG Editor_RegSetValue(HWND hwnd, DWORD dwKey, LPCWSTR pszConfig, LPCWSTR pszValue, DWORD dwType, const BYTE* lpData, DWORD cbData, DWORD dwFlags)
+inline LONG Editor_RegSetValue( HWND hwnd, DWORD dwKey, LPCWSTR pszConfig, LPCWSTR pszValue, DWORD dwType, const BYTE* lpData, DWORD cbData, DWORD dwFlags )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
 	REG_SET_VALUE_INFO info = { 0 };
-	info.cbSize = sizeof(info);
+	info.cbSize = sizeof( info );
 	info.dwKey = dwKey;
 	info.pszConfig = pszConfig;
 	info.pszValue = pszValue;
@@ -2385,17 +2392,17 @@ inline LONG Editor_RegSetValue(HWND hwnd, DWORD dwKey, LPCWSTR pszConfig, LPCWST
 	info.lpData = lpData;
 	info.cbData = cbData;
 	info.dwFlags = dwFlags;
-	return (LONG)SNDMSG((hwnd), EE_REG_SET_VALUE, 0, (LPARAM)&info);
+    return (LONG)SNDMSG( (hwnd), EE_REG_SET_VALUE, 0, (LPARAM)&info );
 }
 
 #define EE_REG_QUERY_VALUE				(EE_FIRST+86)
-// (REG_QUERY_VALUE_INFO*)lParam = pRegQueryValueInfo;
+  // (REG_QUERY_VALUE_INFO*)lParam = pRegQueryValueInfo;
 
-inline LONG Editor_RegQueryValue(HWND hwnd, DWORD dwKey, LPCWSTR pszConfig, LPCWSTR pszValue, DWORD dwType, BYTE* lpData, DWORD* lpcbData, DWORD dwFlags)
+inline LONG Editor_RegQueryValue( HWND hwnd, DWORD dwKey, LPCWSTR pszConfig, LPCWSTR pszValue, DWORD dwType, BYTE* lpData, DWORD* lpcbData, DWORD dwFlags )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
 	REG_QUERY_VALUE_INFO info = { 0 };
-	info.cbSize = sizeof(info);
+	info.cbSize = sizeof( info );
 	info.dwKey = dwKey;
 	info.pszConfig = pszConfig;
 	info.pszValue = pszValue;
@@ -2403,93 +2410,93 @@ inline LONG Editor_RegQueryValue(HWND hwnd, DWORD dwKey, LPCWSTR pszConfig, LPCW
 	info.lpData = lpData;
 	info.lpcbData = lpcbData;
 	info.dwFlags = dwFlags;
-	return (LONG)SNDMSG((hwnd), EE_REG_QUERY_VALUE, 0, (LPARAM)&info);
+    return (LONG)SNDMSG( (hwnd), EE_REG_QUERY_VALUE, 0, (LPARAM)&info );
 }
 
 #define EE_QUERY_STRING					(EE_FIRST+87)
-// (UINT)wParam = nCmdID, (LPWSTR)lParam = psz  (buffer must be MAX_PATH)
-// returns (BOOL)bValidCmd
+  // (UINT)wParam = nCmdID, (LPWSTR)lParam = psz  (buffer must be MAX_PATH)
+  // returns (BOOL)bValidCmd
 
-inline BOOL Editor_QueryString(HWND hwnd, UINT nCmdID, LPWSTR psz, BOOL bShortTitle = FALSE)
+inline BOOL Editor_QueryString( HWND hwnd, UINT nCmdID, LPWSTR psz, BOOL bShortTitle = FALSE )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG(hwnd, EE_QUERY_STRING, (WPARAM)MAKEWPARAM(nCmdID, bShortTitle), (LPARAM)psz);
+    _ASSERT( hwnd && IsWindow( hwnd ) );
+	return (BOOL)SNDMSG( hwnd, EE_QUERY_STRING, (WPARAM)MAKEWPARAM( nCmdID, bShortTitle ), (LPARAM)psz );
 }
 
 #define EE_KEYBOARD_PROP				(EE_FIRST+88)
-// (UINT)wParam = nCmdID, (LPCWSTR)lParam = pszConfigName
-// returns (BOOL)bResult
+  // (UINT)wParam = nCmdID, (LPCWSTR)lParam = pszConfigName
+  // returns (BOOL)bResult
 
-inline BOOL Editor_KeyboardProp(HWND hwnd, UINT nCmdID, LPCWSTR pszConfigName)
+inline BOOL Editor_KeyboardProp( HWND hwnd, UINT nCmdID, LPCWSTR pszConfigName )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG(hwnd, EE_KEYBOARD_PROP, (WPARAM)nCmdID, (LPARAM)pszConfigName);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+	return (BOOL)SNDMSG( hwnd, EE_KEYBOARD_PROP, (WPARAM)nCmdID, (LPARAM)pszConfigName );
 }
 
 #define EE_GET_ACCEL_ARRAY				(EE_FIRST+89)
-// (UINT)wParam = nBufSize (size of buffer in ACCEL)
-// (ACCEL*)lParam = pAccel
+  // (UINT)wParam = nBufSize (size of buffer in ACCEL)
+  // (ACCEL*)lParam = pAccel
 
-inline UINT Editor_GetAccelArray(HWND hwnd, ACCEL* pAccel, UINT nBufSize)
+inline UINT Editor_GetAccelArray( HWND hwnd, ACCEL* pAccel, UINT nBufSize )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (UINT)SNDMSG(hwnd, EE_GET_ACCEL_ARRAY, (WPARAM)nBufSize, (LPARAM)pAccel);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+	return (UINT)SNDMSG( hwnd, EE_GET_ACCEL_ARRAY, (WPARAM)nBufSize, (LPARAM)pAccel );
 }
 
 #define EE_OUTPUT_STRING				(EE_FIRST+90)
-// (UINT)wParam = flags
-// (LPCWSTR)lParam = pszString
+  // (UINT)wParam = flags
+  // (LPCWSTR)lParam = pszString
 
-inline BOOL Editor_OutputString(HWND hwnd, LPCWSTR pszString, UINT flags)
+inline BOOL Editor_OutputString( HWND hwnd, LPCWSTR pszString, UINT flags )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG(hwnd, EE_OUTPUT_STRING, (WPARAM)flags, (LPARAM)pszString);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+	return (BOOL)SNDMSG( hwnd, EE_OUTPUT_STRING, (WPARAM)flags, (LPARAM)pszString );
 }
 
 #define EE_OUTPUT_DIR					(EE_FIRST+91)
-// (LPCWSTR)lParam = pszCurrDir
+  // (LPCWSTR)lParam = pszCurrDir
 
-inline BOOL Editor_OutputDir(HWND hwnd, LPCWSTR pszCurrDir)
+inline BOOL Editor_OutputDir( HWND hwnd, LPCWSTR pszCurrDir )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (BOOL)SNDMSG(hwnd, EE_OUTPUT_DIR, (WPARAM)0, (LPARAM)pszCurrDir);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+	return (BOOL)SNDMSG( hwnd, EE_OUTPUT_DIR, (WPARAM)0, (LPARAM)pszCurrDir );
 }
 
 #define EE_ENUM_HIGHLIGHT				(EE_FIRST+92)
-// (LPWSTR)pBuf
-// (size_t)cchBuf
+  // (LPWSTR)pBuf
+  // (size_t)cchBuf
 
-inline size_t Editor_EnumHighlight(HWND hwnd, LPWSTR pBuf, size_t cchBuf)
+inline size_t Editor_EnumHighlight( HWND hwnd, LPWSTR pBuf, size_t cchBuf )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (size_t)SNDMSG((hwnd), EE_ENUM_HIGHLIGHT, (WPARAM)cchBuf, (LPARAM)pBuf);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+	return (size_t)SNDMSG( (hwnd), EE_ENUM_HIGHLIGHT, (WPARAM)cchBuf, (LPARAM)pBuf );
 }
 
 #define EE_OUTPUT_PROCESS				(EE_FIRST+93)
-// wParam = 0
-// (PROCESS_INFO*)lParam = pProcessInfo
-
-inline BOOL Editor_OutputProcess(HWND hwnd, LPCWSTR pszAppName, LPCWSTR pszCmdLine, LPCWSTR pszDir, UINT nFlags, UINT nCP)
+  // wParam = 0
+  // (PROCESS_INFO*)lParam = pProcessInfo
+  
+inline BOOL Editor_OutputProcess( HWND hwnd, LPCWSTR pszAppName, LPCWSTR pszCmdLine, LPCWSTR pszDir, UINT nFlags, UINT nCP )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
 	PROCESS_INFO pi = { 0 };
-	pi.cbSize = sizeof(pi);
+	pi.cbSize = sizeof( pi );
 	pi.pszAppName = pszAppName;
 	pi.pszCmdLine = pszCmdLine;
 	pi.pszDir = pszDir;
 	pi.nFlags = nFlags;
 	pi.nCP = nCP;
-	return (BOOL)SNDMSG(hwnd, EE_OUTPUT_PROCESS, (WPARAM)0, (LPARAM)&pi);
+	return (BOOL)SNDMSG( hwnd, EE_OUTPUT_PROCESS, (WPARAM)0, (LPARAM)&pi );
 }
 
 #define EE_GET_DROPPED_FILE				(EE_FIRST+94)
-// (int)wParam = nIndex
-// (LPWSTR)lParam = pszBuf
+  // (int)wParam = nIndex
+  // (LPWSTR)lParam = pszBuf
 
-inline UINT Editor_GetDroppedFile(HWND hwnd, int nIndex, LPWSTR pszBuf)
+inline UINT Editor_GetDroppedFile( HWND hwnd, int nIndex, LPWSTR pszBuf )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (UINT)SNDMSG(hwnd, EE_GET_DROPPED_FILE, (WPARAM)nIndex, (LPARAM)pszBuf);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+	return (UINT)SNDMSG( hwnd, EE_GET_DROPPED_FILE, (WPARAM)nIndex, (LPARAM)pszBuf );
 }
 
 typedef struct _RUN_MACRO_INFO {
@@ -2511,39 +2518,39 @@ typedef struct _RUN_MACRO_INFO {
 #define MACRO_LANG_UNKNOWN		0x000000ff
 
 #define EE_RUN_MACRO					(EE_FIRST+95)
-// (RUN_MACRO_INFO*)lParam = pRunMacroInfo
-// retusn  S_OK        (success)
-//         S_FALSE     (macro error like syntax error)
-//         S_EDIT_TEMP (macro error but could not open temporary file when trying to edit)
-//         E_FAIL      (error)
+  // (RUN_MACRO_INFO*)lParam = pRunMacroInfo
+  // retusn  S_OK        (success)
+  //         S_FALSE     (macro error like syntax error)
+  //         S_EDIT_TEMP (macro error but could not open temporary file when trying to edit)
+  //         E_FAIL      (error)
 
-inline HRESULT Editor_RunMacro(HWND hwnd, UINT nFlags, UINT nDefMacroLang, LPCWSTR pszMacroFile, LPCWSTR pszText, POINT_PTR* pptOrgPos, POINT_PTR* pptCodePos, POINT_PTR* pptErrorPos, HGLOBAL* phstrResult)
+inline HRESULT Editor_RunMacro( HWND hwnd, UINT nFlags, UINT nDefMacroLang, LPCWSTR pszMacroFile, LPCWSTR pszText, POINT_PTR* pptOrgPos, POINT_PTR* pptCodePos, POINT_PTR* pptErrorPos, HGLOBAL* phstrResult )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
 	RUN_MACRO_INFO rmi = { 0 };
-	rmi.cbSize = sizeof(rmi);
+	rmi.cbSize = sizeof( rmi );
 	rmi.pszMacroFile = pszMacroFile;
 	rmi.pszText = pszText;
 	rmi.nFlags = nFlags;
 	rmi.nDefMacroLang = nDefMacroLang;
 	rmi.ptErrorPos.x = rmi.ptErrorPos.y = -1;
-	if (pptOrgPos) {
+	if( pptOrgPos ) {
 		rmi.ptOrgPos.x = pptOrgPos->x;
 		rmi.ptOrgPos.y = pptOrgPos->y;
 	}
-	if (pptCodePos) {
+	if( pptCodePos ) {
 		rmi.ptCodePos.x = pptCodePos->x;
 		rmi.ptCodePos.y = pptCodePos->y;
 	}
-	if (phstrResult) {
+	if( phstrResult ){
 		rmi.hstrResult = *phstrResult;
 	}
-	HRESULT hr = (HRESULT)SNDMSG(hwnd, EE_RUN_MACRO, 0, (LPARAM)&rmi);
-	if (pptErrorPos) {
+	HRESULT hr = (HRESULT)SNDMSG( hwnd, EE_RUN_MACRO, 0, (LPARAM)&rmi );
+	if( pptErrorPos ){
 		pptErrorPos->x = rmi.ptErrorPos.x;
 		pptErrorPos->y = rmi.ptErrorPos.y;
 	}
-	if (phstrResult) {
+	if( phstrResult ){
 		*phstrResult = rmi.hstrResult;
 	}
 	return hr;
@@ -2576,16 +2583,16 @@ typedef struct _TEMP_INFO {
 
 #define EE_EDIT_TEMP					(EE_FIRST+96)
 
-inline UINT Editor_EditTemp(HWND hwnd, LPCWSTR pszTempText, LPCWSTR pszTitle, LPCWSTR pszIconPath, LPCWSTR pszConfig, UINT nEncoding, POINT_PTR* pptInitialCaret = NULL, UINT nFlags = 0)
+inline UINT Editor_EditTemp( HWND hwnd, LPCWSTR pszTempText, LPCWSTR pszTitle, LPCWSTR pszIconPath, LPCWSTR pszConfig, UINT nEncoding, POINT_PTR* pptInitialCaret = NULL, UINT nFlags = 0 )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
 	TEMP_INFO ti = { 0 };
-	ti.cbSize = sizeof(ti);
+	ti.cbSize = sizeof( ti );
 	ti.pszTempText = pszTempText;
 	ti.pszTitle = pszTitle;
 	ti.pszIconPath = pszIconPath;
 	ti.pszConfig = pszConfig;
-	if (pptInitialCaret) {
+	if( pptInitialCaret ){
 		ti.ptInitialCaret = *pptInitialCaret;
 	}
 	else {
@@ -2593,42 +2600,42 @@ inline UINT Editor_EditTemp(HWND hwnd, LPCWSTR pszTempText, LPCWSTR pszTitle, LP
 	}
 	ti.nEncoding = nEncoding;
 	ti.nFlags = nFlags;
-	return (UINT)SNDMSG(hwnd, EE_EDIT_TEMP, (WPARAM)0, (LPARAM)&ti);
+	return (UINT)SNDMSG( hwnd, EE_EDIT_TEMP, (WPARAM)0, (LPARAM)&ti );
 }
 
-inline UINT Editor_ActivateTemp(HWND hwnd, UINT nEditID, POINT_PTR* pptInitialCaret = NULL)
+inline UINT Editor_ActivateTemp( HWND hwnd, UINT nEditID, POINT_PTR* pptInitialCaret = NULL )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
 	TEMP_INFO ti = { 0 };
-	ti.cbSize = sizeof(ti);
+	ti.cbSize = sizeof( ti );
 	ti.nID = nEditID;
-	if (pptInitialCaret) {
+	if( pptInitialCaret ){
 		ti.ptInitialCaret = *pptInitialCaret;
 	}
 	else {
 		ti.ptInitialCaret.x = ti.ptInitialCaret.y = -1;
 	}
-	return (UINT)SNDMSG(hwnd, EE_EDIT_TEMP, (WPARAM)0, (LPARAM)&ti);
+	return (UINT)SNDMSG( hwnd, EE_EDIT_TEMP, (WPARAM)0, (LPARAM)&ti );
 }
 
-inline UINT Editor_SaveTemp(HWND hwnd, UINT nEditID)
+inline UINT Editor_SaveTemp( HWND hwnd, UINT nEditID )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
 	TEMP_INFO ti = { 0 };
-	ti.cbSize = sizeof(ti);
+	ti.cbSize = sizeof( ti );
 	ti.nID = nEditID;
 	ti.nFlags = TEMP_INFO_SAVE;
-	return (UINT)SNDMSG(hwnd, EE_EDIT_TEMP, (WPARAM)0, (LPARAM)&ti);
+	return (UINT)SNDMSG( hwnd, EE_EDIT_TEMP, (WPARAM)0, (LPARAM)&ti );
 }
 
-inline UINT Editor_CloseTemp(HWND hwnd, UINT nEditID)
+inline UINT Editor_CloseTemp( HWND hwnd, UINT nEditID )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
 	TEMP_INFO ti = { 0 };
-	ti.cbSize = sizeof(ti);
+	ti.cbSize = sizeof( ti );
 	ti.nID = nEditID;
 	ti.nFlags = TEMP_INFO_CLOSE;
-	return (UINT)SNDMSG(hwnd, EE_EDIT_TEMP, (WPARAM)0, (LPARAM)&ti);
+	return (UINT)SNDMSG( hwnd, EE_EDIT_TEMP, (WPARAM)0, (LPARAM)&ti );
 }
 
 typedef struct _CLIP_INFO {
@@ -2653,85 +2660,85 @@ typedef struct _CLIP_INFO {
 
 #define EE_CLIP_HISTORY			(EE_FIRST+97)
 
-inline UINT Editor_GetClip(HWND hwnd, LPWSTR pszBuf, UINT cchBuf, UINT iPos, UINT* pnFlags)
+inline UINT Editor_GetClip( HWND hwnd, LPWSTR pszBuf, UINT cchBuf, UINT iPos, UINT* pnFlags )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
 	CLIP_INFO ci = { 0 };
-	ci.cbSize = sizeof(ci);
+	ci.cbSize = sizeof( ci );
 	ci.nAction = CI_GET_CLIP;
 	ci.pszBuf = pszBuf;
 	ci.cchBuf = cchBuf;
 	ci.iPos = iPos;
 	ci.nFlags = *pnFlags;
-	UINT nResult = (UINT)SNDMSG(hwnd, EE_CLIP_HISTORY, (WPARAM)0, (LPARAM)&ci);
+	UINT nResult = (UINT)SNDMSG( hwnd, EE_CLIP_HISTORY, (WPARAM)0, (LPARAM)&ci );
 	*pnFlags = ci.nFlags;
 	return nResult;
 }
 
-inline UINT Editor_InsertClip(HWND hwnd, LPCWSTR pszText, UINT iPos, UINT nFlags)
+inline UINT Editor_InsertClip( HWND hwnd, LPCWSTR pszText, UINT iPos, UINT nFlags )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
 	CLIP_INFO ci = { 0 };
-	ci.cbSize = sizeof(ci);
+	ci.cbSize = sizeof( ci );
 	ci.nAction = CI_INSERT_CLIP;
 	ci.pszBuf = (LPWSTR)pszText;
 	ci.iPos = iPos;
 	ci.nFlags = nFlags;
-	UINT nResult = (UINT)SNDMSG(hwnd, EE_CLIP_HISTORY, (WPARAM)0, (LPARAM)&ci);
+	UINT nResult = (UINT)SNDMSG( hwnd, EE_CLIP_HISTORY, (WPARAM)0, (LPARAM)&ci );
 	return nResult;
 }
 
-inline UINT Editor_RemoveClip(HWND hwnd, UINT iPos, UINT nFlags)
+inline UINT Editor_RemoveClip( HWND hwnd, UINT iPos, UINT nFlags )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
 	CLIP_INFO ci = { 0 };
-	ci.cbSize = sizeof(ci);
+	ci.cbSize = sizeof( ci );
 	ci.nAction = CI_REMOVE_CLIP;
 	ci.iPos = iPos;
 	ci.nFlags = nFlags;
-	UINT nResult = (UINT)SNDMSG(hwnd, EE_CLIP_HISTORY, (WPARAM)0, (LPARAM)&ci);
+	UINT nResult = (UINT)SNDMSG( hwnd, EE_CLIP_HISTORY, (WPARAM)0, (LPARAM)&ci );
 	return nResult;
 }
 
-inline int Editor_GetClipPos(HWND hwnd)
+inline int Editor_GetClipPos( HWND hwnd )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
 	CLIP_INFO ci = { 0 };
-	ci.cbSize = sizeof(ci);
+	ci.cbSize = sizeof( ci );
 	ci.nAction = CI_GET_CLIP_POS;
-	UINT nResult = (UINT)SNDMSG(hwnd, EE_CLIP_HISTORY, (WPARAM)0, (LPARAM)&ci);
+	UINT nResult = (UINT)SNDMSG( hwnd, EE_CLIP_HISTORY, (WPARAM)0, (LPARAM)&ci );
 	return (int)nResult;
 }
 
-inline UINT Editor_SetClipPos(HWND hwnd, int iPos)
+inline UINT Editor_SetClipPos( HWND hwnd, int iPos )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
 	CLIP_INFO ci = { 0 };
-	ci.cbSize = sizeof(ci);
+	ci.cbSize = sizeof( ci );
 	ci.nAction = CI_SET_CLIP_POS;
 	ci.iPos = (UINT)iPos;
-	UINT nResult = (UINT)SNDMSG(hwnd, EE_CLIP_HISTORY, (WPARAM)0, (LPARAM)&ci);
+	UINT nResult = (UINT)SNDMSG( hwnd, EE_CLIP_HISTORY, (WPARAM)0, (LPARAM)&ci );
 	return nResult;
 }
 
-inline UINT Editor_RotateClip(HWND hwnd, int iDirection)
+inline UINT Editor_RotateClip( HWND hwnd, int iDirection )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
 	CLIP_INFO ci = { 0 };
-	ci.cbSize = sizeof(ci);
+	ci.cbSize = sizeof( ci );
 	ci.nAction = CI_ROTATE_CLIP;
 	ci.iPos = (UINT)iDirection;
-	UINT nResult = (UINT)SNDMSG(hwnd, EE_CLIP_HISTORY, (WPARAM)0, (LPARAM)&ci);
+	UINT nResult = (UINT)SNDMSG( hwnd, EE_CLIP_HISTORY, (WPARAM)0, (LPARAM)&ci );
 	return nResult;
 }
 
 
 #define EE_GET_OUTPUT_STRING		(EE_FIRST+98)
 
-inline UINT Editor_GetOutputString(HWND hwnd, UINT cchBuf, LPWSTR pBuf)
+inline UINT Editor_GetOutputString( HWND hwnd, UINT cchBuf, LPWSTR pBuf )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	UINT nResult = (UINT)SNDMSG(hwnd, EE_GET_OUTPUT_STRING, (WPARAM)cchBuf, (LPARAM)pBuf);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+	UINT nResult = (UINT)SNDMSG( hwnd, EE_GET_OUTPUT_STRING, (WPARAM)cchBuf, (LPARAM)pBuf );
 	return nResult;
 }
 
@@ -2760,19 +2767,19 @@ typedef struct _ATTR_INFO {
 
 #define EE_GET_ATTR					(EE_FIRST+99)
 
-inline BOOL Editor_GetAttr(HWND hwnd, ATTR_INFO* pAI)
+inline BOOL Editor_GetAttr( HWND hwnd, ATTR_INFO* pAI )
 {
-	return (BOOL)SNDMSG(hwnd, EE_GET_ATTR, 0, (LPARAM)pAI);
+	return (BOOL)SNDMSG( hwnd, EE_GET_ATTR, 0, (LPARAM)pAI );
 }
 
 #define EE_GET_WORD					(EE_FIRST+100)
-// (UINT_PTR)wParam = nBufferSize, (LPWSTR)lParam = szBuffer
-// returns (UINT_PTR)nRequiredBufferSize
+  // (UINT_PTR)wParam = nBufferSize, (LPWSTR)lParam = szBuffer
+  // returns (UINT_PTR)nRequiredBufferSize
 
-inline UINT_PTR Editor_GetWord(HWND hwnd, UINT_PTR nBufferSize, LPWSTR szBuffer)
+inline UINT_PTR Editor_GetWord( HWND hwnd, UINT_PTR nBufferSize, LPWSTR szBuffer )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (UINT_PTR)SNDMSG(hwnd, EE_GET_WORD, (WPARAM)nBufferSize, (LPARAM)szBuffer);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (UINT_PTR)SNDMSG( hwnd, EE_GET_WORD, (WPARAM)nBufferSize, (LPARAM)szBuffer );
 }
 
 typedef struct _SEL_INFO {
@@ -2781,13 +2788,13 @@ typedef struct _SEL_INFO {
 } SEL_INFO;
 
 #define EE_GET_MULTI_SEL					(EE_FIRST+101)
-// (UINT_PTR)wParam = nBufferSize, (LPWSTR)lParam = szBuffer
-// returns (UINT_PTR)nRequiredBufferSize
+  // (UINT_PTR)wParam = nBufferSize, (LPWSTR)lParam = szBuffer
+  // returns (UINT_PTR)nRequiredBufferSize
 
-inline UINT_PTR Editor_GetMultiSel(HWND hwnd, UINT_PTR iSel, SEL_INFO* pSelInfo)
+inline UINT_PTR Editor_GetMultiSel( HWND hwnd, UINT_PTR iSel, SEL_INFO* pSelInfo )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (UINT_PTR)SNDMSG(hwnd, EE_GET_MULTI_SEL, (WPARAM)iSel, (LPARAM)pSelInfo);
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (UINT_PTR)SNDMSG( hwnd, EE_GET_MULTI_SEL, (WPARAM)iSel, (LPARAM)pSelInfo );
 }
 
 typedef struct _OUTLINE_ARRAY_INFO
@@ -2800,18 +2807,18 @@ typedef struct _OUTLINE_ARRAY_INFO
 } OUTLINE_ARRAY_INFO;
 
 #define EE_SET_OUTLINE_ARRAY				(EE_FIRST+102)
-// wParam = 0
-// (OUTLINE_ARRAY_INFO*)lParam = pOutlineArrayInfo
-// return bSuccess
+  // wParam = 0
+  // (OUTLINE_ARRAY_INFO*)lParam = pOutlineArrayInfo
+  // return bSuccess
 
-inline BOOL Editor_SetOutlineArray(HWND hwnd, INT_PTR nStartLine, INT_PTR nCount, BYTE* pLevelData)
+inline BOOL Editor_SetOutlineArray( HWND hwnd, INT_PTR nStartLine, INT_PTR nCount, BYTE* pLevelData )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
 	OUTLINE_ARRAY_INFO info;
 	info.nStartLine = nStartLine;
 	info.nCount = nCount;
 	info.pLevelData = pLevelData;
-	return (BOOL)SNDMSG((hwnd), EE_SET_OUTLINE_ARRAY, 0, (LPARAM)&info);
+	return (BOOL)SNDMSG( (hwnd), EE_SET_OUTLINE_ARRAY, 0, (LPARAM)&info );
 }
 
 typedef struct _GET_COLOR_INFO
@@ -2825,26 +2832,26 @@ typedef struct _GET_COLOR_INFO
 } GET_COLOR_INFO;
 
 #define EE_GET_COLOR						(EE_FIRST+103)
-// wParam = 0
-// (GET_COLOR_INFO*)lParam = pGetColorInfo;
-// return bSuccess;
+  // wParam = 0
+  // (GET_COLOR_INFO*)lParam = pGetColorInfo;
+  // return bSuccess;
 
-inline BOOL Editor_GetColor(HWND hwnd, BOOL bFind, UINT nIndex, COLORREF* pclrText, COLORREF* pclrBack, int* pnAttr)
+inline BOOL Editor_GetColor( HWND hwnd, BOOL bFind, UINT nIndex, COLORREF* pclrText, COLORREF* pclrBack, int* pnAttr )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
 	GET_COLOR_INFO info;
-	info.cbSize = sizeof(info);
+	info.cbSize = sizeof( info );
 	info.bFind = bFind;
 	info.nIndex = nIndex;
-	BOOL bSuccess = (BOOL)SNDMSG((hwnd), EE_GET_COLOR, 0, (LPARAM)&info);
-	if (bSuccess) {
-		if (pclrText) {
+	BOOL bSuccess = (BOOL)SNDMSG( (hwnd), EE_GET_COLOR, 0, (LPARAM)&info );
+	if( bSuccess ){
+		if( pclrText ){
 			*pclrText = info.clrText;
 		}
-		if (pclrBack) {
+		if( pclrBack ){
 			*pclrBack = info.clrBack;
 		}
-		if (pnAttr) {
+		if( pnAttr ){
 			*pnAttr = info.nAttr;
 		}
 	}
@@ -2888,26 +2895,26 @@ inline BOOL Editor_GetColor(HWND hwnd, BOOL bFind, UINT nIndex, COLORREF* pclrTe
 
 
 typedef struct _GET_CELL_INFO {
-	UINT_PTR	cch;		// in
-	UINT		flags;		// in
-	UINT_PTR	yLine;		// in
+    UINT_PTR	cch;		// in
+    UINT		flags;		// in
+    UINT_PTR	yLine;		// in
 	int			iColumn;	// in
 } GET_CELL_INFO;
 
 
 #define EE_GET_CELL						(EE_FIRST+104)
-// (GET_CELL_INFO*)wParam = pGetCellInfo, (LPWSTR)lParam = szString
-// returns (UINT_PTR)nRequiredBufferSize
+  // (GET_CELL_INFO*)wParam = pGetCellInfo, (LPWSTR)lParam = szString
+  // returns (UINT_PTR)nRequiredBufferSize
 
-inline UINT_PTR Editor_GetCell(HWND hwnd, GET_CELL_INFO* pGetCellInfo, LPWSTR szString)
+inline UINT_PTR Editor_GetCell( HWND hwnd, GET_CELL_INFO* pGetCellInfo, LPWSTR szString )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (UINT_PTR)SNDMSG((hwnd), EE_GET_CELL, (WPARAM)(GET_CELL_INFO*)(pGetCellInfo), (LPARAM)(LPWSTR)(szString));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (UINT_PTR)SNDMSG( (hwnd), EE_GET_CELL, (WPARAM)(GET_CELL_INFO*)(pGetCellInfo), (LPARAM)(LPWSTR)(szString) );
 }
 
 typedef struct _FILTER_INFO {
-	UINT		cbSize;    // in
-	UINT		flags;		// in
+    UINT		cbSize;    // in
+    UINT		flags;		// in
 	int			iColumn;	// in
 	LPCWSTR		pszFilter;  // in
 	INT_PTR		xBegin;		// in
@@ -2925,20 +2932,20 @@ typedef struct _FILTER_INFO_EX {
 } FILTER_INFO_EX;
 
 #define EE_FILTER                (EE_FIRST+105)
-// (FILTER_INFO_EX*)wParam = pFilterInfo
-// returns (int)nCount
+  // (FILTER_INFO_EX*)wParam = pFilterInfo
+  // returns (int)nCount
 
-inline int Editor_Filter(HWND hwnd, LPCWSTR szFilter, int iColumn, UINT64 nFlags, INT_PTR xBegin, INT_PTR xEnd)
+inline int Editor_Filter( HWND hwnd, LPCWSTR szFilter, int iColumn, UINT64 nFlags, INT_PTR xBegin, INT_PTR xEnd )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
 	FILTER_INFO_EX fi = { 0 };
-	fi.cbSize = sizeof(fi);
+	fi.cbSize = sizeof( fi );
 	fi.flags = nFlags;
 	fi.iColumn = iColumn;
 	fi.pszFilter = szFilter;
 	fi.xBegin = xBegin;
 	fi.xEnd = xEnd;
-	return (int)SNDMSG((hwnd), EE_FILTER, (WPARAM)&fi, 0);
+    return (int)SNDMSG( (hwnd), EE_FILTER, (WPARAM)&fi, 0 );
 }
 
 #define JOIN_FLAG_UNIQUE_KEY_1		0x0001
@@ -2963,22 +2970,22 @@ typedef struct _JOIN_INFO {
 
 
 #define EE_JOIN					 (EE_FIRST+106)
-// (JOIN_INFO*)wParam = pJoinInfo
-// returns (int)nCount
+  // (JOIN_INFO*)wParam = pJoinInfo
+  // returns (int)nCount
 
-inline int Editor_Join(HWND hwnd, UINT nFlags, LPCWSTR pszDocument1, LPCWSTR pszColumn1, LPCWSTR pszDocument2, LPCWSTR pszColumn2, LPCWSTR pszSelect, int* piDocument3)
+inline int Editor_Join( HWND hwnd, UINT nFlags, LPCWSTR pszDocument1, LPCWSTR pszColumn1, LPCWSTR pszDocument2, LPCWSTR pszColumn2, LPCWSTR pszSelect, int* piDocument3 )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
 	JOIN_INFO ji;
-	ji.cbSize = sizeof(ji);
+	ji.cbSize = sizeof( ji );
 	ji.flags = nFlags;
 	ji.pszDocument1 = pszDocument1;
 	ji.pszDocument2 = pszDocument2;
 	ji.pszColumn1 = pszColumn1;
 	ji.pszColumn2 = pszColumn2;
 	ji.pszSelect = pszSelect;
-	int nResult = (int)SNDMSG((hwnd), EE_JOIN, (WPARAM)&ji, 0);
-	if (nResult >= 0 && piDocument3 != NULL) {
+    int nResult = (int)SNDMSG( (hwnd), EE_JOIN, (WPARAM)&ji, 0 );
+	if( nResult >= 0 && piDocument3 != NULL ) {
 		*piDocument3 = ji.iDocument3;
 	}
 	return nResult;
@@ -3004,17 +3011,17 @@ typedef struct _EXEC_PLUGIN_INFO {
 
 #define EE_EXEC_PLUGIN		(EE_FIRST+107)
 
-inline HRESULT Editor_ExecPlugin(HWND hwnd, LPCWSTR pszName, LONG nFlags, WPARAM wParam, LPARAM lParam, LONG_PTR* pnResult)
+inline HRESULT Editor_ExecPlugin( HWND hwnd, LPCWSTR pszName, LONG nFlags, WPARAM wParam, LPARAM lParam, LONG_PTR* pnResult )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
 	EXEC_PLUGIN_INFO epi;
-	epi.cbSize = sizeof(epi);
+	epi.cbSize = sizeof( epi );
 	epi.nFlags = nFlags;
 	epi.pszName = pszName;
 	epi.wParam = wParam;
 	epi.lParam = lParam;
-	HRESULT hr = (HRESULT)SNDMSG((hwnd), EE_EXEC_PLUGIN, (WPARAM)&epi, 0);
-	if (SUCCEEDED(hr) && pnResult != NULL) {
+	HRESULT hr = (HRESULT)SNDMSG( (hwnd), EE_EXEC_PLUGIN, (WPARAM)&epi, 0 );
+	if( SUCCEEDED( hr ) && pnResult != NULL ) {
 		*pnResult = epi.nResult;
 	}
 	return hr;
@@ -3032,17 +3039,17 @@ typedef struct _FIND_REPLACE_INFO {
 } FIND_REPLACE_INFO;
 
 
-inline HRESULT Editor_FindReplace(HWND hwnd, UINT64 nFlags, LPCWSTR pszFind, LPCWSTR pszReplace, UINT64* pnCount, UINT64* pnMatchedLines)
+inline HRESULT Editor_FindReplace( HWND hwnd, UINT64 nFlags, LPCWSTR pszFind, LPCWSTR pszReplace, UINT64* pnCount, UINT64* pnMatchedLines )
 {
 	FIND_REPLACE_INFO fri = { 0 };
-	fri.cbSize = sizeof(fri);
+	fri.cbSize = sizeof( fri );
 	fri.nFlags = nFlags;
 	fri.pszFind = pszFind;
 	fri.pszReplace = pszReplace;
-	HRESULT hr = (HRESULT)SNDMSG((hwnd), EE_FIND_REPLACE, 0, (LPARAM)&fri);
-	if (SUCCEEDED(hr)) {
-		if (pnCount)  *pnCount = fri.nCount;
-		if (pnMatchedLines)  *pnMatchedLines = fri.nMatchedLines;
+	HRESULT hr = (HRESULT)SNDMSG( (hwnd), EE_FIND_REPLACE, 0, (LPARAM)&fri );
+	if( SUCCEEDED( hr ) )  {
+		if( pnCount )  *pnCount = fri.nCount;
+		if( pnMatchedLines )  *pnMatchedLines = fri.nMatchedLines;
 	}
 	return hr;
 }
@@ -3050,15 +3057,15 @@ inline HRESULT Editor_FindReplace(HWND hwnd, UINT64 nFlags, LPCWSTR pszFind, LPC
 
 #define EE_GET_FILTER (EE_FIRST+109)
 
-inline int Editor_GetFilter(HWND hwnd, int iFilter, LPWSTR pszFilter, UINT cchFilter, int* piColumn, DWORD64* pnFlags, INT_PTR* pxBegin, INT_PTR* pxEnd)
+inline int Editor_GetFilter( HWND hwnd, int iFilter, LPWSTR pszFilter, UINT cchFilter, int* piColumn, DWORD64* pnFlags, INT_PTR* pxBegin, INT_PTR* pxEnd )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
 	FILTER_INFO_EX fi = { 0 };
-	fi.cbSize = sizeof(fi);
+	fi.cbSize = sizeof( fi );
 	fi.pszFilter = pszFilter;
 	fi.cchFilter = cchFilter;
-	int nResult = (int)SNDMSG(hwnd, EE_GET_FILTER, (WPARAM)&fi, (LPARAM)iFilter);
-	if (nResult > 0 && iFilter >= 0) {
+	int nResult = (int)SNDMSG( hwnd, EE_GET_FILTER, (WPARAM)&fi, (LPARAM)iFilter );
+	if( nResult > 0 && iFilter >= 0 ) {
 		*pnFlags = fi.flags;
 		*piColumn = fi.iColumn;
 		*pxBegin = fi.xBegin;
@@ -3079,16 +3086,16 @@ typedef struct _MANAGE_DUPLICATES_INFO {
 	int*    anColumns;
 } MANAGE_DUPLICATES_INFO;
 
-inline HRESULT Editor_ManageDuplicates(HWND hwnd, UINT nFlags, int nNumOfColumns, int* anColumns, INT_PTR* pnFound)
+inline HRESULT Editor_ManageDuplicates( HWND hwnd, UINT nFlags, int nNumOfColumns, int* anColumns, INT_PTR* pnFound )
 {
 	MANAGE_DUPLICATES_INFO mdi = { 0 };
 	mdi.nVer = VER_MANAGE_DUPLICATES_INFO;
 	mdi.nFlags = nFlags;
 	mdi.nNumOfColumns = nNumOfColumns;
 	mdi.anColumns = anColumns;
-	HRESULT hr = (HRESULT)SNDMSG((hwnd), EE_MANAGE_DUPLICATES, 0, (LPARAM)&mdi);
-	if (SUCCEEDED(hr)) {
-		if (pnFound)  *pnFound = mdi.nFound;
+	HRESULT hr = (HRESULT)SNDMSG( (hwnd), EE_MANAGE_DUPLICATES, 0, (LPARAM)&mdi );
+	if( SUCCEEDED( hr ) ) {
+		if( pnFound )  *pnFound = mdi.nFound;
 	}
 	return hr;
 }
@@ -3111,7 +3118,7 @@ typedef struct _SORT_INFO {
 	COLUMN_INFO* anColumns;
 } SORT_INFO;
 
-inline HRESULT Editor_Sort(HWND hwnd, UINT nFlags, LPCWSTR pszLocale, int nNumOfColumns, COLUMN_INFO* anColumns, BOOL* pbModified)
+inline HRESULT Editor_Sort( HWND hwnd, UINT nFlags, LPCWSTR pszLocale, int nNumOfColumns, COLUMN_INFO* anColumns, BOOL* pbModified )
 {
 	SORT_INFO si = { 0 };
 	si.nVer = VER_SORT_INFO;
@@ -3134,10 +3141,10 @@ inline HRESULT Editor_Sort(HWND hwnd, UINT nFlags, LPCWSTR pszLocale, int nNumOf
 // (SET_CELL_INFO*)wParam = pCellInfo, (LPWSTR)lParam = szString
 // 
 
-inline HRESULT Editor_SetCell(HWND hwnd, GET_CELL_INFO* pCellInfo, LPCWSTR szString)
+inline HRESULT Editor_SetCell( HWND hwnd, GET_CELL_INFO* pCellInfo, LPCWSTR szString )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (HRESULT)SNDMSG((hwnd), EE_SET_CELL, (WPARAM)(GET_CELL_INFO*)(pCellInfo), (LPARAM)(LPCWSTR)(szString));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+	return (HRESULT)SNDMSG( (hwnd), EE_SET_CELL, (WPARAM)(GET_CELL_INFO*)(pCellInfo), (LPARAM)(LPCWSTR)(szString) );
 }
 
 #define SET_COLUMN_INSERT			0x0010
@@ -3169,20 +3176,20 @@ typedef struct _COLUMN_STRUCT {
 // wParam = 0, (COLUMN_STRUCT*)lParam = pColumnStruct
 // 
 
-inline HRESULT Editor_SetColumn(HWND hwnd, COLUMN_STRUCT* pColumnStruct)
+inline HRESULT Editor_SetColumn( HWND hwnd, COLUMN_STRUCT* pColumnStruct )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (HRESULT)SNDMSG((hwnd), EE_SET_COLUMN, 0, (WPARAM)(COLUMN_STRUCT*)(pColumnStruct));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+	return (HRESULT)SNDMSG( (hwnd), EE_SET_COLUMN, 0, (LPARAM)(COLUMN_STRUCT*)(pColumnStruct) );
 }
 
 #define EE_GET_COLUMN		(EE_FIRST+114)
 // wParam = 0, (COLUMN_STRUCT*)lParam = pColumnStruct
 // 
 
-inline HRESULT Editor_GetColumn(HWND hwnd, COLUMN_STRUCT* pColumnStruct)
+inline HRESULT Editor_GetColumn( HWND hwnd, COLUMN_STRUCT* pColumnStruct )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (HRESULT)SNDMSG((hwnd), EE_GET_COLUMN, 0, (WPARAM)(COLUMN_STRUCT*)(pColumnStruct));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+	return (HRESULT)SNDMSG( (hwnd), EE_GET_COLUMN, 0, (LPARAM)(COLUMN_STRUCT*)(pColumnStruct) );
 }
 
 #define SHOW_TIP_HIDE			0
@@ -3203,10 +3210,10 @@ typedef struct _TIP_INFO {
 // wParam = 0, (TIP_INFO*)lParam = pTipInfo
 //
 
-inline void Editor_ShowTip(HWND hwnd, TIP_INFO* pTipInfo)
+inline void Editor_ShowTip( HWND hwnd, TIP_INFO* pTipInfo )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	SNDMSG((hwnd), EE_SHOW_TIP, 0, (WPARAM)(TIP_INFO*)(pTipInfo));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+	SNDMSG( (hwnd), EE_SHOW_TIP, 0, (LPARAM)(TIP_INFO*)(pTipInfo) );
 }
 
 typedef struct _ACTIVE_STRING_INFO {
@@ -3221,13 +3228,46 @@ typedef struct _ACTIVE_STRING_INFO {
 // wParam = 0, (LINK_INFO*)lParam = pInfo
 //
 
-inline int Editor_GetActiveString(HWND hwnd, ACTIVE_STRING_INFO* pInfo)
+inline int Editor_GetActiveString( HWND hwnd, ACTIVE_STRING_INFO* pInfo )
 {
-	_ASSERT(hwnd && IsWindow(hwnd));
-	return (int)SNDMSG((hwnd), EE_GET_ACTIVE_STRING, 0, (WPARAM)(ACTIVE_STRING_INFO*)(pInfo));
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+	return (int)SNDMSG( (hwnd), EE_GET_ACTIVE_STRING, 0, (LPARAM)(ACTIVE_STRING_INFO*)(pInfo) );
 }
 
+#define FLAG_FILL_DEFAULT			0
+#define FLAG_FILL_COPY				1
+#define FLAG_FILL_SERIES			2
+#define FLAG_FILL_FLASH				4
+#define FLAG_FILL_TYPE_MASK			0x000f
+#define FLAG_FILL_DONT_OVERWRITE	0x0100
+#define FLAG_FILL_REPEAT			0x0200
+#define FLAG_FILL_EXPAND_SELECTION	0x0400
+#define FLAG_FILL_VALID_MASK		(FLAG_FILL_COPY | FLAG_FILL_SERIES | FLAG_FILL_FLASH | FLAG_FILL_DONT_OVERWRITE | FLAG_FILL_REPEAT | FLAG_FILL_EXPAND_SELECTION)
 
+#define S_FILL_NONE					S_OK
+#define S_FILL_COPY					(HRESULT)(FLAG_FILL_COPY)
+#define S_FILL_SERIES				(HRESULT)(FLAG_FILL_SERIES)
+#define S_FILL_FLASH				(HRESULT)(FLAG_FILL_FLASH)
+
+typedef struct _AUTOFILL_INFO {
+	UINT		cbSize;
+	POINT_PTR	ptSrcCellStart;
+	POINT_PTR	ptSrcCellEnd;
+	POINT_PTR	ptDestCellStart;
+	POINT_PTR	ptDestCellEnd;
+	DWORD		dwFlags;
+	INT64       nIncrement;
+} AUTOFILL_INFO;
+
+#define EE_AUTOFILL		(EE_FIRST+117)
+// wParam = 0, (AUTOFILL_INFO*)lParam = pInfo
+//
+
+inline HRESULT Editor_AutoFill( HWND hwnd, AUTOFILL_INFO* pInfo )
+{
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+	return (int)SNDMSG( (hwnd), EE_AUTOFILL, 0, (LPARAM)(AUTOFILL_INFO*)(pInfo) );
+}
 
 //
 #define EE_LAST                 (EE_FIRST+255)
@@ -3300,7 +3340,7 @@ inline int Editor_GetActiveString(HWND hwnd, ACTIVE_STRING_INFO* pInfo)
 // new from v7
 #define EI_GET_CURRENT_FOLDER	317
 #define EI_IS_LARGE_DOC			318
-
+	
 // new from v8
 #define EI_USE_INI				319
 #define EI_GET_LANGUAGE			320
@@ -3373,6 +3413,9 @@ inline int Editor_GetActiveString(HWND hwnd, ACTIVE_STRING_INFO* pInfo)
 // new from v17.2
 #define EI_VALIDATE_CSV						364
 #define EI_GET_CLIENT_RECT_NO_BARS			365
+
+// new from v17.5
+#define EI_REFRESH_COMMON_SETTINGS			366
 
 #define VALIDATE_ADJUST_COLUMNS			0x00000001
 #define VALIDATE_QUIET					0x00000002
@@ -3482,7 +3525,7 @@ inline int Editor_GetActiveString(HWND hwnd, ACTIVE_STRING_INFO* pInfo)
 #define FLAG_FIND_ADD_NEXT				0x4000000000000000i64  // EE_FIND internal use only
 //#define FLAG_FIND_NO_DESELECT			0x0000000000800000i64  // EE_FIND internal use only
 #define FLAG_FIND_NO_DESELECT			0x8000000000000000i64  // EE_FIND internal use only
-
+														  
 #define FLAG_FIND_OUTPUT				0x0000000001000000i64  // EE_FIND_IN_FILES only
 #define FLAG_FIND_FILTER				0x0000000010000000i64  // internal use only
 #define FLAG_FIND_OPEN_DIRECT			(FLAG_FIND_FILTER)
@@ -3687,60 +3730,60 @@ inline int Editor_GetActiveString(HWND hwnd, ACTIVE_STRING_INFO* pInfo)
 class CCustomizeInfo
 {
 public:
-	LOGFONTW    m_alfScreen[MAX_CHARSET];   // screen fonts
-	LOGFONTW    m_alfPrint[MAX_CHARSET];    // printer fonts
-	POINT       m_ptShowScrollBar;      // scroll bars (x: horizontal and y: vertical) 0: no display, 1: display only when necessary, 2: display always
-	int         m_nPrinterMarginTop;    // printer top margin
-	int         m_nPrinterMarginBottom; // printer bottom margin
-	int         m_nPrinterMarginLeft;   // printer left margin
-	int         m_nWrapMode;        // wrap mode
-	int         m_nMarginNormal;    // normal line margin
-	int         m_nMarginQuote;     // quoted line margin
-	int         m_nTabSpace;        // tab columns 
-	int         m_nEncodingRead;    // encoding for read
+    LOGFONTW    m_alfScreen[MAX_CHARSET];   // screen fonts
+    LOGFONTW    m_alfPrint[MAX_CHARSET];    // printer fonts
+    POINT       m_ptShowScrollBar;      // scroll bars (x: horizontal and y: vertical) 0: no display, 1: display only when necessary, 2: display always
+    int         m_nPrinterMarginTop;    // printer top margin
+    int         m_nPrinterMarginBottom; // printer bottom margin
+    int         m_nPrinterMarginLeft;   // printer left margin
+    int         m_nWrapMode;        // wrap mode
+    int         m_nMarginNormal;    // normal line margin
+    int         m_nMarginQuote;     // quoted line margin
+    int         m_nTabSpace;        // tab columns 
+    int         m_nEncodingRead;    // encoding for read
 	BYTE		m_nLineSpace;		// line space
 	BYTE		m_nCharSpace;		// v7: character space
 	WORD		m_wParenPairBits;   // PRO only  v9: Paren Pairs to highlight/autocomplete Bits  
 	BYTE		m_nLineSpacePrint;  // space between lines
-	bool        m_bAutoCompleteParen;  // PRO only  v9: Auto Complete corresponding bracket
+    bool        m_bAutoCompleteParen;  // PRO only  v9: Auto Complete corresponding bracket
 	BYTE		m_byteMinimapAspectPercent;  // v16.3
 	BYTE		m_byteDefHighlight;          // was m_bIPv4;
-	UINT        m_nAS;      //  was m_nHiliteTag before v3.16
+    UINT        m_nAS;      //  was m_nHiliteTag before v3.16
 	bool		m_bShowUserDefinedGuides;  // v14.2
 	BYTE		m_byteScrollFlags;
 	bool		m_bTrackChanges;
 	bool		m_bPreferUtf8;		// v14.6
-	UINT        m_nAutoSaveTime;    // PRO only  auto save time
-	int         m_nCheckFileChanged; // v3: changed by another program
-	UINT        m_nNotUsed; // m_nUndoBufferSize;  // PRO only  undo max number
-	int         m_nEncodingNew;     // v3: encoding for new files
-	int         m_nCrLfNew;         // v3: how to return for new files
+    UINT        m_nAutoSaveTime;    // PRO only  auto save time
+    int         m_nCheckFileChanged; // v3: changed by another program
+    UINT        m_nNotUsed; // m_nUndoBufferSize;  // PRO only  undo max number
+    int         m_nEncodingNew;     // v3: encoding for new files
+    int         m_nCrLfNew;         // v3: how to return for new files
 	bool         m_bShowOneLineAbove;     // v15.4
 	bool         m_bRememberVisitedLinks; // v15.4
 	bool         m_bFixedPitchFont;
 	BYTE		m_byteMinimapZoomPercent;  // v16.3
-	int         m_nEncodingWrite;   // PRO only v3: encoding for saving
-	int         m_nCrLfWrite;       // PRO only v3: how to return for saving
-	int         m_nSpecialSyntax;   // v3.16: Special Syntax
-	WCHAR       m_chEscape;         // v3.16: Escape character
-	bool        m_bPasteAnsi;       // PRO only v3.16: Always Paste as ANSI
-	bool        m_bNewTemplate;     // v3.17: Use template for a new file
-	bool        m_bSaveAsNameEntity; // v3.17: Use Named Entity Reference
-	bool        m_bInsertSpacesTab; // v3.19: Insert spaces for Tab
-	WCHAR       m_chIndentBegin;    // v3.17: Begin Indent
-	WCHAR       m_chIndentEnd;      // v3.17: End Indent
-	WCHAR       m_chEndOfStatement; // v3.17: End of Statement
-	int         m_nIndentSpace;     // v3.19: Indent columns
-	bool        m_bNoSpaceEdge;     // v3.19: No space at left edge of Window
-	BYTE        m_byteOpenFileInQuotes;       // obsolete  // m_bAnsiFont;        // v3.28: Non-Unicode Font --- obsolete
-	bool        m_bShowScrollOnlyActive; // v3.31: Show scroll bars only when current pane is active
-	bool        m_bWrapPagePrint;   // v3.31: Wrap by Page when printing
-	int         m_nPrinterMarginRight;  // v3.24: printer right margin
-	int         m_nMaxFindHilite;       // PRO only v3.32: (Depth of searched string to highlight) - 1
-	bool        m_bPromptInvalidChar; // v4.01: Prompt if invalid characters found
-	BYTE        m_byteUntitled;        // PRO only 6.00: auto name untitled -- v4.03: Synchronize Read-Only attribute
-	BYTE        m_byteMonitorInterval;  // PRO only 5.00: monitor interval for changed file (File tab)
-	bool        m_bVirtualSpace;    // PRO only 7.00 : Enable Virtual Space
+    int         m_nEncodingWrite;   // PRO only v3: encoding for saving
+    int         m_nCrLfWrite;       // PRO only v3: how to return for saving
+    int         m_nSpecialSyntax;   // v3.16: Special Syntax
+    WCHAR       m_chEscape;         // v3.16: Escape character
+    bool        m_bPasteAnsi;       // PRO only v3.16: Always Paste as ANSI
+    bool        m_bNewTemplate;     // v3.17: Use template for a new file
+    bool        m_bSaveAsNameEntity; // v3.17: Use Named Entity Reference
+    bool        m_bInsertSpacesTab; // v3.19: Insert spaces for Tab
+    WCHAR       m_chIndentBegin;    // v3.17: Begin Indent
+    WCHAR       m_chIndentEnd;      // v3.17: End Indent
+    WCHAR       m_chEndOfStatement; // v3.17: End of Statement
+    int         m_nIndentSpace;     // v3.19: Indent columns
+    bool        m_bNoSpaceEdge;     // v3.19: No space at left edge of Window
+    BYTE        m_byteOpenFileInQuotes;       // obsolete  // m_bAnsiFont;        // v3.28: Non-Unicode Font --- obsolete
+    bool        m_bShowScrollOnlyActive; // v3.31: Show scroll bars only when current pane is active
+    bool        m_bWrapPagePrint;   // v3.31: Wrap by Page when printing
+    int         m_nPrinterMarginRight;  // v3.24: printer right margin
+    int         m_nMaxFindHilite;       // PRO only v3.32: (Depth of searched string to highlight) - 1
+    bool        m_bPromptInvalidChar; // v4.01: Prompt if invalid characters found
+    BYTE        m_byteUntitled;        // PRO only 6.00: auto name untitled -- v4.03: Synchronize Read-Only attribute
+    BYTE        m_byteMonitorInterval;  // PRO only 5.00: monitor interval for changed file (File tab)
+    bool        m_bVirtualSpace;    // PRO only 7.00 : Enable Virtual Space
 	BYTE		m_byteSmoothScrollSpeed;	// 7.00 : Smooth Scroll Speed  MIN_SMOOTH_SCROLL_SPEED (slow) - MAX_SMOOTH_SCROLL_SPEED (fast)
 	bool		m_bShowIndentGuides;        // PRO only 8.00 : Show Indent Guides
 	bool		m_bHorzGrid;		// PRO only v10: Horizontal Grid (was m_bDottedLine)
@@ -3765,118 +3808,118 @@ public:
 	bool		m_bEnableFooter;
 	bool		m_bHighlightMatchingTag;  // PRO only  v12 Highlight Matching Tag
 	bool		m_bPromptRename;    // v13  Prompt before Deleting a Old File When Renaming
-	BYTE        m_abUrlChar[128];   // =1: URL char, =2: URL char byte not at end.
-	bool        m_bNotepadDiary;    // notepad compatible diary
-	bool        m_bPrintLineNum;    // print line numbers
-	bool        m_bPromptNullFile;  // prompt if Null character found
-	BYTE        m_bytePromptCrLf;      // prompt at inconsistent returns
-	bool        m_bShowEOF;         // show EOF
-	bool        m_bShowCR;          // show returns
-	bool        m_bShowTab;         // show tab
-	BYTE        m_byteShowLineNum;     // show line numbers
-	BYTE        m_bShowLogicalLine; // line and column display as
-	bool        m_bWordWrap;        // word wrap
-	bool        m_bFaceWrap;        // PRO only enable non-wrap words
-	bool        m_bKinsokuWrap;     // wrap these characters
-	bool        m_bSaveTabToSpace;  // PRO only save tabs as spaces
-	bool        m_bSaveInsertCR;    // PRO only insert returns when saving
-	bool        m_bUseRecycleBin;   // PRO only use recylce bin to buckup
-	bool        m_bAutoIndent;      // auto indent
-	bool		m_bWrapIndent;		// PRO only v7.00: auto indent for wrap position, used to be m_bOverwrite, v6.00 Obsolete
-	bool        m_bHilite;          // highlight these words
-	bool        m_bDummy6;	      // was m_bURL;             // link to URLs
-	bool        m_bDummy5;      // was m_bMailTo;          // clicking mail address sends mail
-	bool        m_bLinkDblclick;      // obsolete  // PRO only enable double clicking only
-	bool        m_bFullPath;        // PRO only show file name with full path
-	bool        m_b7BitKanji;       // OBSOLETE  7 bit kanji  
-	bool        m_bCrLfSeparateMark;    // PRO only  show CR and LF with different marks 
-	bool        m_bShowRuler;       // show ruler
-	bool        m_bAutoSave;        // PRO only auto save
-	bool        m_bDeleteEmpty;     // PRO only delete empty files when saving
-	bool        m_bSaveNotModified; // PRO only always enable saving
-	bool        m_bBackupFolder;            // save backups to backup folder
-	bool        m_bFolderIfRecycleFailed;   // PRO only save to backup folder if recycle bin not available
-	bool        m_bAutoSaveFolder;          // PRO only save to auto save folder
-	bool        m_bRenameBackup;            // PRO only rename if same file name exists
-	bool        m_bControlIME;              // run input method editor
-	bool        m_bRenameAutoSave;          // PRO only rename if same file name exists
-	bool        m_bBackupSame;              // PRO only save backups to same folder
-	bool        m_bShowDbSpace;             // show double-byte spaces
-	bool        m_bInitialFolder;		    // v14.1: Specify Initial Folder
-	bool        m_bPageVScroll;             // v3: always enable 1page vertical scroll
-	bool        m_bPageHScroll;             // v3: always enable 1page horizontal scroll
-	bool        m_bHalfPageScroll;          // PRO only v3: scroll half page
-	bool        m_bDetectUnicode;           // v3: detect Unicode(UTF-16/UTF-8)signature (BOM)
-	bool        m_bAllowCtrlChars;          // PRO only v3: allow insert control character
-	bool        m_bMoveCursorScroll;        // PRO only v3: move cursor by scrolling
-	bool        m_bHorzLine;                // v3: horizontal line
-	bool        m_bVertLine;                // v3: vertical line
-											//bool        m_bScroll2Lines;            // PRO only v3: double line scroll
+    BYTE        m_abUrlChar[128];   // =1: URL char, =2: URL char byte not at end.
+    bool        m_bNotepadDiary;    // notepad compatible diary
+    bool        m_bPrintLineNum;    // print line numbers
+    bool        m_bPromptNullFile;  // prompt if Null character found
+    BYTE        m_bytePromptCrLf;      // prompt at inconsistent returns
+    bool        m_bShowEOF;         // show EOF
+    bool        m_bShowCR;          // show returns
+    bool        m_bShowTab;         // show tab
+    BYTE        m_byteShowLineNum;     // show line numbers
+    BYTE        m_bShowLogicalLine; // line and column display as
+    bool        m_bWordWrap;        // word wrap
+    bool        m_bFaceWrap;        // PRO only enable non-wrap words
+    bool        m_bKinsokuWrap;     // wrap these characters
+    bool        m_bSaveTabToSpace;  // PRO only save tabs as spaces
+    bool        m_bSaveInsertCR;    // PRO only insert returns when saving
+    bool        m_bUseRecycleBin;   // PRO only use recylce bin to buckup
+    bool        m_bAutoIndent;      // auto indent
+    bool		m_bWrapIndent;		// PRO only v7.00: auto indent for wrap position, used to be m_bOverwrite, v6.00 Obsolete
+    bool        m_bHilite;          // highlight these words
+    bool        m_bDummy6;	      // was m_bURL;             // link to URLs
+    bool        m_bDummy5;      // was m_bMailTo;          // clicking mail address sends mail
+    bool        m_bLinkDblclick;      // obsolete  // PRO only enable double clicking only
+    bool        m_bFullPath;        // PRO only show file name with full path
+    bool        m_b7BitKanji;       // OBSOLETE  7 bit kanji  
+    bool        m_bCrLfSeparateMark;    // PRO only  show CR and LF with different marks 
+    bool        m_bShowRuler;       // show ruler
+    bool        m_bAutoSave;        // PRO only auto save
+    bool        m_bDeleteEmpty;     // PRO only delete empty files when saving
+    bool        m_bSaveNotModified; // PRO only always enable saving
+    bool        m_bBackupFolder;            // save backups to backup folder
+    bool        m_bFolderIfRecycleFailed;   // PRO only save to backup folder if recycle bin not available
+    bool        m_bAutoSaveFolder;          // PRO only save to auto save folder
+    bool        m_bRenameBackup;            // PRO only rename if same file name exists
+    bool        m_bControlIME;              // run input method editor
+    bool        m_bRenameAutoSave;          // PRO only rename if same file name exists
+    bool        m_bBackupSame;              // PRO only save backups to same folder
+    bool        m_bShowDbSpace;             // show double-byte spaces
+    bool        m_bInitialFolder;		    // v14.1: Specify Initial Folder
+    bool        m_bPageVScroll;             // v3: always enable 1page vertical scroll
+    bool        m_bPageHScroll;             // v3: always enable 1page horizontal scroll
+    bool        m_bHalfPageScroll;          // PRO only v3: scroll half page
+    bool        m_bDetectUnicode;           // v3: detect Unicode(UTF-16/UTF-8)signature (BOM)
+    bool        m_bAllowCtrlChars;          // PRO only v3: allow insert control character
+    bool        m_bMoveCursorScroll;        // PRO only v3: move cursor by scrolling
+    bool        m_bHorzLine;                // v3: horizontal line
+    bool        m_bVertLine;                // v3: vertical line
+	//bool        m_bScroll2Lines;            // PRO only v3: double line scroll
 	BYTE        m_byteScrollFlagsEx;            // PRO only v3: double line scroll
-	bool        m_bFastKeyRepeat;           // PRO only v3: faster cursor movement
-	bool        m_bDBCharUrl;               // PRO only v3: recognize double-byte characters as URLs
-	bool        m_bKanaUrl;                 // PRO only v3: recognize single-byte kana and kana marks as URLs
-	bool        m_bShowPage;                // PRO only v3: display page number
-	bool        m_bUsePrinterFont;          // v3: choose font for default printer
-	bool        m_bSignatureNew;            // PRO only v3: Unicode, UTF-8 signature for new files
-	bool        m_bPromptNotAnsi;           // v3: prompt on saving if unicode characters cannot convert to ANSI
-	bool        m_bSignatureWrite;          // PRO only  v3: Unicode, UTF-8 signature for saving
-	bool        m_bIgnoreColorPrint;        // v3.08: Ignore Color and Underlines (Print)
-	bool        m_bNoFullPathIfNotActive;   // v3.08: Display file name without full path if the window is not active
-	bool        m_bSmoothScroll;            // v7.00: Smooth Scroll, used to be m_bSaveOverwrite, v6.00 Obsolete
-	bool        m_bNoChangeCrLf;            // PRO only v3.13: Do not change how to return at copy and paste.
-	bool        m_bShowSpace;               // v3.13: show single-byte spaces
-	bool        m_bWordWrapMark;            // v3.13: allows word wrap after marks
-	bool        m_bPrintSeparatingLines;    // v3.14: Draw separating lines
-	bool        m_bSameFontPrint;           // v3.14: Use Display Font as Printer Font
-	bool        m_bHiliteCorresParen;       // PRO only v3.14: Highlight Corresponding Parentheses
-	bool        m_bSelectInQuotes;           // obsolete   // PRO only v3.14: Highlight and easily select in "quotes".
-	bool        m_bDetectUTF8;              // v3.15: Detect UTF-8
-	bool        m_bDetectCharset;           // v3.15: Detect Charset (HTML)
-	bool        m_bDetectAll;               // v3.15: Detect All
-	bool        m_bDeleteSpaceEnd;          // PRO only v3.15: Delete Space at End of Lines
-	bool        m_bSaveAsEntity;            // v3.15: Encode Unicode as HTML Entity
-	bool        m_bShowControl;             // PRO only v3.15: Highlight Control Characters
-	BYTE        m_bQuoteType;               // v3.16: Quote type, combination of QUOTE_SINGLE, QUOTE_DOUBLE and QUOTE_CONTINUE
-	WCHAR       m_chKanjiInChar;            // OBSOLETE transitional character to kanji
-	WCHAR       m_chKanjiOutChar;           // OBSOLETE transitional character to single-bytes 
-	WCHAR       m_chTagLeft;                // begin tag
-	WCHAR       m_chTagRight;               // end tag
-	WCHAR       m_szHeader[MAX_HEADER];             // header
-	WCHAR       m_szLineComment1[MAX_LINE_COMMENT]; // v3.16: Line Comment (obsolete)
-	WCHAR       m_szScriptBegin[MAX_SCRIPT_BEGIN];  // v3.16: Script Begin
-	WCHAR       m_szFooter[MAX_FOOTER];             // footer
-	WCHAR       m_szLineComment2[MAX_LINE_COMMENT]; // v3.16: Line Comment (obsolete)
-	WCHAR       m_szScriptEnd[MAX_SCRIPT_END];      // v3.16: Script End
-	WCHAR       m_szPrefix[MAX_PREFIX_LENGTH];      // default quote mark 
-	WCHAR       m_szKinsokuBegin[MAX_KINSOKU_BEGIN]; // not allowed at line head
-	WCHAR       m_szKinsokuEnd[MAX_KINSOKU_END];    //  not allowed at line end
-	WCHAR       m_szDefExt[MAX_DEF_EXT];            // default extension
-	WCHAR       m_szPrefixList[MAX_PREFIX_LIST];    // quote mark 
-	WCHAR       m_szBackupPath[MAX_PATH];           // backup folder
-	WCHAR       m_szAutoSavePath[MAX_PATH];         // PRO only auto save folder
-	WCHAR       m_szMultiCommentBegin[MAX_MULTI_COMMENT_BEGIN];  // Multi-line comment begin
-	WCHAR       m_szMultiCommentEnd[MAX_MULTI_COMMENT_END];      // Multi-line comment end
+    bool        m_bFastKeyRepeat;           // PRO only v3: faster cursor movement
+    bool        m_bDBCharUrl;               // PRO only v3: recognize double-byte characters as URLs
+    bool        m_bKanaUrl;                 // PRO only v3: recognize single-byte kana and kana marks as URLs
+    bool        m_bShowPage;                // PRO only v3: display page number
+    bool        m_bUsePrinterFont;          // v3: choose font for default printer
+    bool        m_bSignatureNew;            // PRO only v3: Unicode, UTF-8 signature for new files
+    bool        m_bPromptNotAnsi;           // v3: prompt on saving if unicode characters cannot convert to ANSI
+    bool        m_bSignatureWrite;          // PRO only  v3: Unicode, UTF-8 signature for saving
+    bool        m_bIgnoreColorPrint;        // v3.08: Ignore Color and Underlines (Print)
+    bool        m_bNoFullPathIfNotActive;   // v3.08: Display file name without full path if the window is not active
+    bool        m_bSmoothScroll;            // v7.00: Smooth Scroll, used to be m_bSaveOverwrite, v6.00 Obsolete
+    bool        m_bNoChangeCrLf;            // PRO only v3.13: Do not change how to return at copy and paste.
+    bool        m_bShowSpace;               // v3.13: show single-byte spaces
+    bool        m_bWordWrapMark;            // v3.13: allows word wrap after marks
+    bool        m_bPrintSeparatingLines;    // v3.14: Draw separating lines
+    bool        m_bSameFontPrint;           // v3.14: Use Display Font as Printer Font
+    bool        m_bHiliteCorresParen;       // PRO only v3.14: Highlight Corresponding Parentheses
+    bool        m_bSelectInQuotes;           // obsolete   // PRO only v3.14: Highlight and easily select in "quotes".
+    bool        m_bDetectUTF8;              // v3.15: Detect UTF-8
+    bool        m_bDetectCharset;           // v3.15: Detect Charset (HTML)
+    bool        m_bDetectAll;               // v3.15: Detect All
+    bool        m_bDeleteSpaceEnd;          // PRO only v3.15: Delete Space at End of Lines
+    bool        m_bSaveAsEntity;            // v3.15: Encode Unicode as HTML Entity
+    bool        m_bShowControl;             // PRO only v3.15: Highlight Control Characters
+    BYTE        m_bQuoteType;               // v3.16: Quote type, combination of QUOTE_SINGLE, QUOTE_DOUBLE and QUOTE_CONTINUE
+    WCHAR       m_chKanjiInChar;            // OBSOLETE transitional character to kanji
+    WCHAR       m_chKanjiOutChar;           // OBSOLETE transitional character to single-bytes 
+    WCHAR       m_chTagLeft;                // begin tag
+    WCHAR       m_chTagRight;               // end tag
+    WCHAR       m_szHeader[MAX_HEADER];             // header
+    WCHAR       m_szLineComment1[MAX_LINE_COMMENT]; // v3.16: Line Comment (obsolete)
+    WCHAR       m_szScriptBegin[MAX_SCRIPT_BEGIN];  // v3.16: Script Begin
+    WCHAR       m_szFooter[MAX_FOOTER];             // footer
+    WCHAR       m_szLineComment2[MAX_LINE_COMMENT]; // v3.16: Line Comment (obsolete)
+    WCHAR       m_szScriptEnd[MAX_SCRIPT_END];      // v3.16: Script End
+    WCHAR       m_szPrefix[MAX_PREFIX_LENGTH];      // default quote mark 
+    WCHAR       m_szKinsokuBegin[MAX_KINSOKU_BEGIN]; // not allowed at line head
+    WCHAR       m_szKinsokuEnd[MAX_KINSOKU_END];    //  not allowed at line end
+    WCHAR       m_szDefExt[MAX_DEF_EXT];            // default extension
+    WCHAR       m_szPrefixList[MAX_PREFIX_LIST];    // quote mark 
+    WCHAR       m_szBackupPath[MAX_PATH];           // backup folder
+    WCHAR       m_szAutoSavePath[MAX_PATH];         // PRO only auto save folder
+    WCHAR       m_szMultiCommentBegin[MAX_MULTI_COMMENT_BEGIN];  // Multi-line comment begin
+    WCHAR       m_szMultiCommentEnd[MAX_MULTI_COMMENT_END];      // Multi-line comment end
 public:
-	WCHAR       m_szRegexIgnoreIndent[MAX_REGEX_INDENT];
-	WCHAR       m_szRegexIndentBegin[MAX_REGEX_INDENT];
-	WCHAR       m_szRegexIndentEnd[MAX_REGEX_INDENT];
-	WCHAR       m_szRegexIndentStatement[MAX_REGEX_INDENT];
+    WCHAR       m_szRegexIgnoreIndent[MAX_REGEX_INDENT];
+    WCHAR       m_szRegexIndentBegin[MAX_REGEX_INDENT];
+    WCHAR       m_szRegexIndentEnd[MAX_REGEX_INDENT];
+    WCHAR       m_szRegexIndentStatement[MAX_REGEX_INDENT];
 	WCHAR		m_szNewLineComment1[MAX_NEW_LINE_COMMENT];  // v14.1 Line Comment
 	WCHAR		m_szNewLineComment2[MAX_NEW_LINE_COMMENT];  // v14.1 Line Comment
 	WCHAR		m_szInitialFolder[MAX_PATH];
 	WCHAR		m_szTemplateFile[MAX_PATH];                 // v17.0
 	WCHAR		m_szConfigCopiedFrom[MAX_DEF_CONFIG_NAME];  // v17.0
-
+    
 public:
-	void Initialize();
+    void Initialize();
 	bool IsSpellInCheckedAny() const {
 		return m_bSpellQuote || m_bSpellSingleQuotes || m_bSpellDoubleQuotes || m_bSpellComment || m_bSpellScript || m_bSpellInTag || m_bSpellHilite || m_bSpellHyperlink || m_bSpellRest;
 	}
 	bool IsSpellInCheckedAll() const {
 		return m_bSpellQuote && m_bSpellSingleQuotes && m_bSpellDoubleQuotes && m_bSpellComment && m_bSpellScript && m_bSpellInTag && m_bSpellHilite && m_bSpellHyperlink && m_bSpellRest;
 	}
-	int GetDefaultFontHeight(int nCharset, BOOL bUseCourierNew) const;
+	int GetDefaultFontHeight( int nCharset, BOOL bUseCourierNew ) const;
 	void FreeDefault();
 };
 
@@ -4751,7 +4794,7 @@ typedef struct {
 
 } TAG_ENTRY;
 
-typedef BOOL(CALLBACK* ENUM_SYMBOL_PROC)(TAG_ENTRY*, LPARAM);
+typedef BOOL( CALLBACK* ENUM_SYMBOL_PROC )(TAG_ENTRY*, LPARAM);
 
 typedef struct _GET_SYMBOLS_INFO {
 	UINT_PTR			cbSize;
