@@ -2,6 +2,8 @@
 *
 !/**/
 !*.*
+!LICENSE
+!license
 
 # Filters file
 *.vcxproj.filters
