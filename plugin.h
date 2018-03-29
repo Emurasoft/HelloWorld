@@ -889,21 +889,21 @@ public:
 };
 
 
-#define HISTORY_INSERT_CHAR	  		0
-#define HISTORY_BACK_SPACE	  		1
-#define HISTORY_DELETE_CHAR	  		2
-#define HISTORY_INSERT_STRING		3
-#define HISTORY_DELETE_STRING		5
-#define HISTORY_INSERT_TAB_SEL		6
-#define HISTORY_REVISION_RANGE		7
-#define HISTORY_SV_MODE				8
-#define HISTORY_REPLACE_STRING		9
-#define HISTORY_START_REPLACE		10
-#define HISTORY_REORDER_COLUMN		11
-//#define HISTORY_CSV_EDIT_START		12
-#define HISTORY_CARET_POS			13
-#define HISTORY_REPLACE_ARRAY		14  // v16.6
-#define HISTORY_COMMENT				15
+#define HISTORY_INSERT_CHAR	  		0x00000000L
+#define HISTORY_BACK_SPACE	  		0x00000001L
+#define HISTORY_DELETE_CHAR	  		0x00000002L
+#define HISTORY_INSERT_STRING		0x00000003L
+#define HISTORY_DELETE_STRING		0x00000005L
+#define HISTORY_INSERT_TAB_SEL		0x00000006L
+#define HISTORY_REVISION_RANGE		0x00000007L
+#define HISTORY_SV_MODE				0x00000008L
+#define HISTORY_REPLACE_STRING		0x00000009L
+#define HISTORY_START_REPLACE		0x0000000aL
+#define HISTORY_REORDER_COLUMN		0x0000000bL
+#define HISTORY_SEL_ARRAY			0x0000000cL  // v17.6
+#define HISTORY_CARET_POS			0x0000000dL
+#define HISTORY_REPLACE_ARRAY		0x0000000eL  // v16.6
+#define HISTORY_COMMENT				0x0000000fL
 #define HISTORY_TYPE_MASK			0x0000000fL
 
 #define HISTORY_GROUP_BEGINNING		0x00000100L  // v16.8
@@ -923,6 +923,7 @@ public:
 #define HISTORY_REPLACE_SAME_STRING 0x02000000L
 #define HISTORY_IGNORE_DELETED_STRING 0x04000000L
 #define HISTORY_CSV_EDIT_START		0x08000000L
+#define HISTORY_SEL_LINE			0x10000000L  // v17.6
 
 typedef struct _HISTORY_INFO {
 	size_t  cbSize;
@@ -1960,19 +1961,32 @@ inline int Editor_GetSelTypeEx( HWND hwnd, BOOL bNeedAlways )
 #endif
 
 #define EE_IS_CHAR_HALF_OR_FULL (EE_FIRST+57)
-  // (WCHAR)wParam = ch
+  // 1.
+  // (WCHAR)wParam = ch    WCHAR if nFlag == 0, UINT (scaler value) if nFlag == -1
+  // (int)lParam = nFlag  
+  // 2.
+  // (int)wParam = cchStr
+  // (LPCWSTR)lParam = pStr   
   // return (int)nWidth
 
-#ifdef EE_STRICT
+
 inline int Editor_IsCharHalfOrFull( HWND hwnd, WCHAR ch )
 {
 	_ASSERT( hwnd && IsWindow( hwnd ) );
     return (int)SNDMSG( (hwnd), EE_IS_CHAR_HALF_OR_FULL, (WPARAM)ch, (LPARAM)0 );
 }
-#else
-#define Editor_IsCharHalfOrFull( hwnd, ch ) \
-    (int)SNDMSG( (hwnd), EE_IS_CHAR_HALF_OR_FULL, (WPARAM)ch, (LPARAM)0 )
-#endif
+
+inline int Editor_IsCharHalfOrFull( HWND hwnd, UINT ch )
+{
+	_ASSERT( hwnd && IsWindow( hwnd ) );
+    return (int)SNDMSG( (hwnd), EE_IS_CHAR_HALF_OR_FULL, (WPARAM)ch, (LPARAM)-1 );
+}
+
+//inline INT_PTR Editor_IsCharHalfOrFull( HWND hwnd, LPCWSTR pStr, UINT cchStr )
+//{
+//	_ASSERT( hwnd && IsWindow( hwnd ) );
+//    return (INT_PTR)SNDMSG( (hwnd), EE_IS_CHAR_HALF_OR_FULL, (WPARAM)cchStr, (LPARAM)pStr );
+//}
 
 #define EE_INFO                 (EE_FIRST+58)
   // (int)wParam = nCmd
@@ -2954,7 +2968,10 @@ inline int Editor_Filter( HWND hwnd, LPCWSTR szFilter, int iColumn, UINT64 nFlag
 #define JOIN_FLAG_INCLUDE_ALL_2		0x0008
 #define JOIN_FLAG_MATCH_CASE		0x0010
 #define JOIN_FLAG_SIMPLE_JOIN		0x0020
-#define JOIN_FLAG_MASK				0x003f
+#define JOIN_FLAG_IGNORE_HEADINGS_1	0x0040
+#define JOIN_FLAG_IGNORE_HEADINGS_2	0x0080
+#define JOIN_FLAG_MASK				0x00ff
+#define DEF_JOIN_FLAG				(JOIN_FLAG_IGNORE_HEADINGS_1 | JOIN_FLAG_IGNORE_HEADINGS_2)
 
 
 typedef struct _JOIN_INFO {
@@ -3244,7 +3261,7 @@ inline int Editor_GetActiveString( HWND hwnd, ACTIVE_STRING_INFO* pInfo )
 #define FLAG_FILL_EXPAND_SELECTION	0x0400
 #define FLAG_FILL_VALID_MASK		(FLAG_FILL_COPY | FLAG_FILL_SERIES | FLAG_FILL_FLASH | FLAG_FILL_DONT_OVERWRITE | FLAG_FILL_REPEAT | FLAG_FILL_EXPAND_SELECTION)
 
-#define S_FILL_NONE					S_OK
+#define S_FILL_NONE					S_OK  // = 0
 #define S_FILL_COPY					(HRESULT)(FLAG_FILL_COPY)
 #define S_FILL_SERIES				(HRESULT)(FLAG_FILL_SERIES)
 #define S_FILL_FLASH				(HRESULT)(FLAG_FILL_FLASH)

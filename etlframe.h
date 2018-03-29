@@ -310,9 +310,6 @@ public:
 		if( wParam & BITMAP_24BIT_COLOR ){
 			lResult = T::_MASK_TRUE_COLOR;
 		}
-		else if( wParam & BITMAP_256_COLOR ){
-			lResult = T::_MASK_256_COLOR;
-		}
 		return lResult;
 	}
 
