@@ -1,5 +1,13 @@
 #pragma once
 
+#include "resource.h"
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <windowsx.h>
+#define VERIFY(f) _ASSERTE(f)
+#define ETL_FRAME_CLASS_NAME MyCFrame
+#include "etlframe.h"
+
 class MyCFrame : public CETLFrame<MyCFrame>
 {
 public:
@@ -26,35 +34,44 @@ public:
 		_SUPPORT_EE_STD = 0
 	};
 
-	void OnCommand( HWND hwnd );
+	void OnCommand(HWND hwnd);
 
-	void OnEvents(HWND hwnd, UINT nEvent, LPARAM lParam)
-	{}
+	void OnEvents(HWND hwnd, UINT nEvent, LPARAM lParam) {}
 
-	BOOL QueryStatus(HWND hwnd, LPBOOL pbChecked)
-	{*pbChecked = FALSE; return TRUE;}
+	BOOL QueryStatus(HWND hwnd, LPBOOL pbChecked) {
+		*pbChecked = FALSE;
+		return TRUE;
+	}
 
-	BOOL DisableAutoComplete(HWND hwnd)
-	{return FALSE;}
+	BOOL DisableAutoComplete(HWND hwnd) {
+		return FALSE;
+	}
 
-	BOOL UseDroppedFiles(HWND hwnd)
-	{return FALSE;}
+	BOOL UseDroppedFiles(HWND hwnd) {
+		return FALSE;
+	}
 
-	BOOL QueryUninstall(HWND hwnd)
-	{return FALSE;}
+	BOOL QueryUninstall(HWND hwnd) {
+		return FALSE;
+	}
 
-	BOOL SetUninstall(HWND hwnd, LPTSTR command, LPTSTR param)
-	{return UNINSTALL_SIMPLE_DELETE;}
+	BOOL SetUninstall(HWND hwnd, LPTSTR command, LPTSTR param) {
+		return UNINSTALL_SIMPLE_DELETE;
+	}
 
-	BOOL QueryProperties(HWND hwnd)
-	{return FALSE;}
+	BOOL QueryProperties(HWND hwnd) {
+		return FALSE;
+	}
 
-	BOOL SetProperties(HWND hwnd)
-	{return FALSE;}
+	BOOL SetProperties(HWND hwnd) {
+		return FALSE;
+	}
 
-	BOOL PreTranslateMessage(HWND hwnd, MSG* pMsg)
-	{return FALSE;}
+	BOOL PreTranslateMessage(HWND hwnd, MSG* pMsg) {
+		return FALSE;
+	}
 
-	LRESULT UserMessage(HWND hwnd, WPARAM wParam, LPARAM lParam)
-	{return NULL;}
+	LRESULT UserMessage(HWND hwnd, WPARAM wParam, LPARAM lParam) {
+		return NULL;
+	}
 };
